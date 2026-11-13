@@ -1,0 +1,81 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0000000000000000000000C8 /* VercelManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000064 /* VercelManagerApp.swift */; };
+		0000000000000000000000C9 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000065 /* Models.swift */; };
+		0000000000000000000000CA /* VercelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000066 /* VercelAPI.swift */; };
+		0000000000000000000000CB /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000067 /* KeychainStore.swift */; };
+		0000000000000000000000CC /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000068 /* AppModel.swift */; };
+		0000000000000000000000CD /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000069 /* Components.swift */; };
+		0000000000000000000000CE /* ConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000006A /* ConnectView.swift */; };
+		0000000000000000000000CF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000006B /* DashboardView.swift */; };
+		0000000000000000000000D0 /* ProjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000006C /* ProjectsView.swift */; };
+		0000000000000000000000D1 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000006D /* ProjectDetailView.swift */; };
+		0000000000000000000000D2 /* DeploymentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000006E /* DeploymentDetailView.swift */; };
+		0000000000000000000000D3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000006F /* SettingsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		000000000000000000000064 /* VercelManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VercelManagerApp.swift; sourceTree = "<group>"; };
+		000000000000000000000065 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		000000000000000000000066 /* VercelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VercelAPI.swift; sourceTree = "<group>"; };
+		000000000000000000000067 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		000000000000000000000068 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		000000000000000000000069 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		00000000000000000000006A /* ConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectView.swift; sourceTree = "<group>"; };
+		00000000000000000000006B /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		00000000000000000000006C /* ProjectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsView.swift; sourceTree = "<group>"; };
+		00000000000000000000006D /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
+		00000000000000000000006E /* DeploymentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeploymentDetailView.swift; sourceTree = "<group>"; };
+		00000000000000000000006F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		000000000000000000000012 /* VercelManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VercelManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		00000000000000000000000A /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		000000000000000000000001 = {isa = PBXGroup; children = (000000000000000000000002 /* VercelManager */, 000000000000000000000006 /* Products */); sourceTree = "<group>"; };
+		000000000000000000000002 /* VercelManager */ = {isa = PBXGroup; children = (000000000000000000000003 /* App */, 000000000000000000000004 /* Core */, 000000000000000000000005 /* Views */); path = VercelManager; sourceTree = "<group>"; };
+		000000000000000000000003 /* App */ = {isa = PBXGroup; children = (000000000000000000000064 /* VercelManagerApp.swift */); path = App; sourceTree = "<group>"; };
+		000000000000000000000004 /* Core */ = {isa = PBXGroup; children = (000000000000000000000065 /* Models.swift */, 000000000000000000000066 /* VercelAPI.swift */, 000000000000000000000067 /* KeychainStore.swift */, 000000000000000000000068 /* AppModel.swift */); path = Core; sourceTree = "<group>"; };
+		000000000000000000000005 /* Views */ = {isa = PBXGroup; children = (000000000000000000000069 /* Components.swift */, 00000000000000000000006A /* ConnectView.swift */, 00000000000000000000006B /* DashboardView.swift */, 00000000000000000000006C /* ProjectsView.swift */, 00000000000000000000006D /* ProjectDetailView.swift */, 00000000000000000000006E /* DeploymentDetailView.swift */, 00000000000000000000006F /* SettingsView.swift */); path = Views; sourceTree = "<group>"; };
+		000000000000000000000006 /* Products */ = {isa = PBXGroup; children = (000000000000000000000012 /* VercelManager.app */); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		000000000000000000000008 /* VercelManager */ = {isa = PBXNativeTarget; buildConfigurationList = 000000000000000000000011 /* Build configuration list for PBXNativeTarget "VercelManager" */; buildPhases = (000000000000000000000009 /* Sources */, 00000000000000000000000A /* Frameworks */, 00000000000000000000000B /* Resources */); buildRules = (); dependencies = (); name = VercelManager; productName = VercelManager; productReference = 000000000000000000000012 /* VercelManager.app */; productType = "com.apple.product-type.application"; };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		000000000000000000000007 /* Project object */ = {isa = PBXProject; attributes = { BuildIndependentTargetsInParallel = YES; LastUpgradeCheck = 1600; TargetAttributes = { 000000000000000000000008 = { CreatedOnToolsVersion = 16.0; }; }; }; buildConfigurationList = 000000000000000000000010 /* Build configuration list for PBXProject "VercelManager" */; compatibilityVersion = "Xcode 14.0"; developmentRegion = de; hasScannedForEncodings = 0; knownRegions = (de, Base); mainGroup = 000000000000000000000001; productRefGroup = 000000000000000000000006 /* Products */; projectDirPath = ""; projectRoot = ""; targets = (000000000000000000000008 /* VercelManager */); };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		00000000000000000000000B /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		000000000000000000000009 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (0000000000000000000000C8 /* VercelManagerApp.swift in Sources */, 0000000000000000000000C9 /* Models.swift in Sources */, 0000000000000000000000CA /* VercelAPI.swift in Sources */, 0000000000000000000000CB /* KeychainStore.swift in Sources */, 0000000000000000000000CC /* AppModel.swift in Sources */, 0000000000000000000000CD /* Components.swift in Sources */, 0000000000000000000000CE /* ConnectView.swift in Sources */, 0000000000000000000000CF /* DashboardView.swift in Sources */, 0000000000000000000000D0 /* ProjectsView.swift in Sources */, 0000000000000000000000D1 /* ProjectDetailView.swift in Sources */, 0000000000000000000000D2 /* DeploymentDetailView.swift in Sources */, 0000000000000000000000D3 /* SettingsView.swift in Sources */); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		00000000000000000000000C /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_VERSION = 5.0; DEBUG_INFORMATION_FORMAT = dwarf; GCC_OPTIMIZATION_LEVEL = 0; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; }; name = Debug; };
+		00000000000000000000000D /* Release */ = {isa = XCBuildConfiguration; buildSettings = { ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_VERSION = 5.0; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; GCC_OPTIMIZATION_LEVEL = s; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O"; }; name = Release; };
+		00000000000000000000000E /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES; INFOPLIST_KEY_UILaunchScreen_Generation = YES; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.mnnsbstn.vercelmanager; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		00000000000000000000000F /* Release */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES; INFOPLIST_KEY_UILaunchScreen_Generation = YES; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.mnnsbstn.vercelmanager; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		000000000000000000000010 /* Build configuration list for PBXProject "VercelManager" */ = {isa = XCConfigurationList; buildConfigurations = (00000000000000000000000C /* Debug */, 00000000000000000000000D /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		000000000000000000000011 /* Build configuration list for PBXNativeTarget "VercelManager" */ = {isa = XCConfigurationList; buildConfigurations = (00000000000000000000000E /* Debug */, 00000000000000000000000F /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+	};
+	rootObject = 000000000000000000000007 /* Project object */;
+}

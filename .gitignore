@@ -1,0 +1,19 @@
+# Xcode user-specific files
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+xcuserdata/
+DerivedData/
+build/
+.DS_Store
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# Secrets and local credentials
+.env
+.env.*
+*.p12
+*.mobileprovision
+*.cer
+*.key
