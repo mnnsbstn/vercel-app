@@ -21,6 +21,7 @@
 		00000000000000000000D7 /* RedeployConfirmationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000007B /* RedeployConfirmationSheet.swift */; };
 		00000000000000000000D4 /* VercelAPIErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000000000000000000070 /* VercelAPIErrorTests.swift */; };
 		00000000000000000000D6 /* RefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000D5 /* RefreshCoordinator.swift */; };
+		00000000000000000000D8 /* ProjectCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000007C /* ProjectCatalog.swift */; };
 		00000000000000000000E1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00000000000000000000E2 /* XCTest.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		000000000000000000000012 /* VercelManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VercelManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0000000000000000000070 /* VercelAPIErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VercelAPIErrorTests.swift; sourceTree = "<group>"; };
 		00000000000000000000D5 /* RefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshCoordinator.swift; sourceTree = "<group>"; };
+		00000000000000000000007C /* ProjectCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCatalog.swift; sourceTree = "<group>"; };
 		0000000000000000000071 /* VercelManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VercelManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00000000000000000000E2 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -55,7 +57,7 @@
 		0000000000000000000072 /* VercelManagerTests */ = {isa = PBXGroup; children = (0000000000000000000070 /* VercelAPIErrorTests.swift */); path = VercelManagerTests; sourceTree = "<group>"; };
 		000000000000000000000002 /* VercelManager */ = {isa = PBXGroup; children = (000000000000000000000003 /* App */, 000000000000000000000004 /* Core */, 000000000000000000000005 /* Views */); path = VercelManager; sourceTree = "<group>"; };
 		000000000000000000000003 /* App */ = {isa = PBXGroup; children = (000000000000000000000064 /* VercelManagerApp.swift */); path = App; sourceTree = "<group>"; };
-		000000000000000000000004 /* Core */ = {isa = PBXGroup; children = (000000000000000000000065 /* Models.swift */, 000000000000000000000066 /* VercelAPI.swift */, 000000000000000000000067 /* KeychainStore.swift */, 000000000000000000000068 /* AppModel.swift */, 00000000000000000000D5 /* RefreshCoordinator.swift */); path = Core; sourceTree = "<group>"; };
+		000000000000000000000004 /* Core */ = {isa = PBXGroup; children = (000000000000000000000065 /* Models.swift */, 000000000000000000000066 /* VercelAPI.swift */, 000000000000000000000067 /* KeychainStore.swift */, 000000000000000000000068 /* AppModel.swift */, 00000000000000000000D5 /* RefreshCoordinator.swift */, 00000000000000000000007C /* ProjectCatalog.swift */); path = Core; sourceTree = "<group>"; };
 		000000000000000000000005 /* Views */ = {isa = PBXGroup; children = (000000000000000000000069 /* Components.swift */, 00000000000000000000006A /* ConnectView.swift */, 00000000000000000000006B /* DashboardView.swift */, 00000000000000000000006C /* ProjectsView.swift */, 00000000000000000000006D /* ProjectDetailView.swift */, 00000000000000000000006E /* DeploymentDetailView.swift */, 00000000000000000000007B /* RedeployConfirmationSheet.swift */, 00000000000000000000006F /* SettingsView.swift */); path = Views; sourceTree = "<group>"; };
 		000000000000000000000006 /* Products */ = {isa = PBXGroup; children = (000000000000000000000012 /* VercelManager.app */, 0000000000000000000071 /* VercelManagerTests.xctest */); name = Products; sourceTree = "<group>"; };
 /* End PBXGroup section */
@@ -83,7 +85,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		000000000000000000000009 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (0000000000000000000000C8 /* VercelManagerApp.swift in Sources */, 0000000000000000000000C9 /* Models.swift in Sources */, 0000000000000000000000CA /* VercelAPI.swift in Sources */, 0000000000000000000000CB /* KeychainStore.swift in Sources */, 0000000000000000000000CC /* AppModel.swift in Sources */, 00000000000000000000D6 /* RefreshCoordinator.swift in Sources */, 0000000000000000000000CD /* Components.swift in Sources */, 0000000000000000000000CE /* ConnectView.swift in Sources */, 0000000000000000000000CF /* DashboardView.swift in Sources */, 0000000000000000000000D0 /* ProjectsView.swift in Sources */, 0000000000000000000000D1 /* ProjectDetailView.swift in Sources */, 0000000000000000000000D2 /* DeploymentDetailView.swift in Sources */, 00000000000000000000D7 /* RedeployConfirmationSheet.swift in Sources */, 0000000000000000000000D3 /* SettingsView.swift in Sources */); runOnlyForDeploymentPostprocessing = 0; };
+		000000000000000000000009 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (0000000000000000000000C8 /* VercelManagerApp.swift in Sources */, 0000000000000000000000C9 /* Models.swift in Sources */, 0000000000000000000000CA /* VercelAPI.swift in Sources */, 0000000000000000000000CB /* KeychainStore.swift in Sources */, 0000000000000000000000CC /* AppModel.swift in Sources */, 00000000000000000000D6 /* RefreshCoordinator.swift in Sources */, 00000000000000000000D8 /* ProjectCatalog.swift in Sources */, 0000000000000000000000CD /* Components.swift in Sources */, 0000000000000000000000CE /* ConnectView.swift in Sources */, 0000000000000000000000CF /* DashboardView.swift in Sources */, 0000000000000000000000D0 /* ProjectsView.swift in Sources */, 0000000000000000000000D1 /* ProjectDetailView.swift in Sources */, 0000000000000000000000D2 /* DeploymentDetailView.swift in Sources */, 00000000000000000000D7 /* RedeployConfirmationSheet.swift in Sources */, 0000000000000000000000D3 /* SettingsView.swift in Sources */); runOnlyForDeploymentPostprocessing = 0; };
 		0000000000000000000075 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (00000000000000000000D4 /* VercelAPIErrorTests.swift in Sources */); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 

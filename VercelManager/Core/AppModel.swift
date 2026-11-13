@@ -9,6 +9,8 @@ final class AppModel: ObservableObject {
     @Published private(set) var user: VercelUser?
     @Published private(set) var teams: [VercelTeam] = []
     @Published private(set) var projects: [VercelProject] = []
+    @Published private(set) var projectsHasMorePages = false
+    @Published private(set) var projectsLoadedPages = 0
     @Published private(set) var recentDeployments: [VercelDeployment] = []
     @Published private(set) var scopeID: String
     @Published var errorMessage: String?
@@ -93,7 +95,7 @@ final class AppModel: ObservableObject {
                 async let loadedProjects = api.projects(teamID: teamIDAtStart)
                 async let loadedDeployments = api.deployments(teamID: teamIDAtStart)
 
-                let fetchedProjects = try await loadedProjects
+                let projectPage = try await loadedProjects
                 let fetchedDeployments = try await loadedDeployments
 
                 guard RefreshCoordinator.shouldApply(
@@ -105,9 +107,11 @@ final class AppModel: ObservableObject {
                     continue
                 }
 
-                projects = fetchedProjects.sorted {
+                projects = projectPage.projects.sorted {
                     $0.name.localizedStandardCompare($1.name) == .orderedAscending
                 }
+                projectsHasMorePages = projectPage.hasMorePages
+                projectsLoadedPages = projectPage.loadedPages
                 recentDeployments = fetchedDeployments
             } catch {
                 guard RefreshCoordinator.shouldApply(
@@ -135,9 +139,25 @@ final class AppModel: ObservableObject {
         scopeID = newScope
         UserDefaults.standard.set(newScope, forKey: Self.scopeKey)
         projects = []
+        projectsHasMorePages = false
+        projectsLoadedPages = 0
         recentDeployments = []
         errorMessage = nil
         await refresh()
+    }
+
+    var projectsLoadSummary: String? {
+        guard !projects.isEmpty else { return nil }
+        var parts = ["\(projects.count) Projekt\(projects.count == 1 ? "" : "e") geladen"]
+        if projectsLoadedPages > 1 {
+            parts.append("\(projectsLoadedPages) API-Seiten (je \(ProjectsPagination.pageSize))")
+        }
+        if projectsHasMorePages {
+            parts.append(
+                "Limit: max. \(ProjectsPagination.maxLoadedProjects) — weitere Projekte nicht enthalten"
+            )
+        }
+        return parts.joined(separator: " · ")
     }
 
     func redeploy(_ deployment: VercelDeployment) async throws -> VercelRedeployResult {
@@ -198,6 +218,8 @@ final class AppModel: ObservableObject {
         user = nil
         teams = []
         projects = []
+        projectsHasMorePages = false
+        projectsLoadedPages = 0
         recentDeployments = []
         scopeID = ""
         UserDefaults.standard.removeObject(forKey: Self.scopeKey)
