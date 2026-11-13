@@ -4,7 +4,7 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 
 ## Entwicklung in Cursor (13.–27. November 2026)
 
-- **[AGENTS.md](AGENTS.md)** – automatisch gelesene Cursor-Agentenregeln (Scope, Stack, Non-negotiables).
+- **[AGENTS.md](AGENTS.md)** – automatisch gelesene, dauerhaft geltende Cursor-Agentenregeln.
 - **[docs/M1_AUDIT.md](docs/M1_AUDIT.md)** – M1-Technikprüfung und Gap-Analyse (SBSTN-120/121).
 - **[Linear-Projekt P-SBSTN-4](https://linear.app/mnnsbstn/project/vercel-manager-985f75483227)** – 4 Meilensteine, 20 Issues, Fristen und Abhängigkeiten.
 - **Release-Ziel:** 27.11.2026: privat auf echtem iPhone getestete Version `v1.0.0` (kein garantierter App-Store-Release).
