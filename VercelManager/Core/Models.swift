@@ -87,6 +87,75 @@ struct DeploymentsResponse: Decodable {
     let deployments: [VercelDeployment]
 }
 
+struct FlexibleVercelTimestamp: Decodable {
+    let date: Date?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let milliseconds = try? container.decode(Double.self) {
+            date = Date(timeIntervalSince1970: milliseconds / 1000)
+        } else if let string = try? container.decode(String.self), let milliseconds = Double(string) {
+            date = Date(timeIntervalSince1970: milliseconds / 1000)
+        } else {
+            date = nil
+        }
+    }
+}
+
+private struct DeploymentEventPayload: Decodable {
+    let text: String?
+    let type: String?
+    let id: String?
+    let created: FlexibleVercelTimestamp?
+}
+
+private struct DeploymentEventDTO: Decodable {
+    let type: String?
+    let created: FlexibleVercelTimestamp?
+    let text: String?
+    let payload: DeploymentEventPayload?
+    let id: String?
+
+    func normalized(index: Int) -> VercelDeploymentEvent? {
+        let raw = text ?? payload?.text
+        guard let raw else { return nil }
+        let message = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !message.isEmpty else { return nil }
+        let eventType = (type ?? payload?.type ?? "log").lowercased()
+        let eventID = id ?? payload?.id ?? "evt-\(index)"
+        return VercelDeploymentEvent(
+            id: eventID,
+            type: eventType,
+            message: message,
+            createdAt: created?.date ?? payload?.created?.date
+        )
+    }
+}
+
+struct VercelDeploymentEvent: Identifiable, Hashable {
+    let id: String
+    let type: String
+    let message: String
+    let createdAt: Date?
+
+    var typeLabel: String {
+        switch type {
+        case "stderr", "error": return "Fehler"
+        case "stdout", "command", "stdout-end": return "Build"
+        case "deployment-state": return "Status"
+        default: return type.capitalized
+        }
+    }
+}
+
+extension VercelDeploymentEvent {
+    static func decodeList(from data: Data) throws -> [VercelDeploymentEvent] {
+        let decoder = JSONDecoder()
+        let dtos = try decoder.decode([DeploymentEventDTO].self, from: data)
+        return dtos.enumerated().compactMap { $1.normalized(index: $0) }
+    }
+}
+
 extension Double {
     var vercelDate: Date { Date(timeIntervalSince1970: self / 1000) }
 }
