@@ -49,6 +49,7 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 - GET /v6/deployments?limit=40
 - GET /v6/deployments?projectId=...&limit=50
 - GET /v3/deployments/{id}/events?direction=backward&limit=200 (Build-Logs)
+- POST /v13/deployments `{ name, deploymentId }` (Redeploy nach Bestätigung)
 
 Für Team-Ressourcen wird automatisch `teamId` als Query-Parameter angehängt. Die Projektliste lädt maximal zehn Seiten mit je 100 Projekten, die Dashboard-Deployments maximal 40 Einträge.
 

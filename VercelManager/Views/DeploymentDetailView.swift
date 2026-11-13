@@ -12,6 +12,17 @@ struct DeploymentDetailView: View {
     @State private var logsLoading = false
     @State private var logsError: String?
     @State private var copyConfirmation = false
+    @State private var showRedeploySheet = false
+    @State private var isRedeploying = false
+    @State private var redeploySuccessMessage: String?
+    @State private var redeployErrorMessage: String?
+
+    private var canRedeploy: Bool {
+        guard let name = deployment.name?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+            return false
+        }
+        return !name.isEmpty
+    }
 
     private func loadLogs() async {
         logsLoading = true
@@ -110,10 +121,35 @@ struct DeploymentDetailView: View {
                     }
                 }
 
-                Text("Redeploy und Rollback sind bewusst noch nicht verfügbar und erfordern eine separate Freigabe.")
-                    .font(.footnote)
-                    .foregroundStyle(AppStyle.secondaryText)
-                    .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 10) {
+                    Button {
+                        showRedeploySheet = true
+                    } label: {
+                        Label("Redeploy", systemImage: "arrow.triangle.2.circlepath")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding(16)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(canRedeploy ? .black : AppStyle.secondaryText)
+                    .background(canRedeploy ? Color.orange : Color.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
+                    .disabled(!canRedeploy || isRedeploying)
+                    .accessibilityHint("Öffnet einen Bestätigungsdialog vor dem Auslösen eines neuen Deployments")
+
+                    if !canRedeploy {
+                        Text("Redeploy ist nicht verfügbar, weil der Projektname in den Deployment-Daten fehlt.")
+                            .font(.footnote)
+                            .foregroundStyle(AppStyle.secondaryText)
+                    } else {
+                        Text("Rollback ist in v1.0 noch nicht enthalten. Redeploy löst genau einen neuen Build aus — nur nach Bestätigung.")
+                            .font(.footnote)
+                            .foregroundStyle(AppStyle.secondaryText)
+                    }
+                }
+
+                if let redeployErrorMessage {
+                    ErrorNotice(message: redeployErrorMessage)
+                }
             }
             .padding(18)
         }
@@ -122,8 +158,43 @@ struct DeploymentDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task(id: deployment.uid) { await loadLogs() }
         .refreshable { await loadLogs() }
+        .sheet(isPresented: $showRedeploySheet) {
+            RedeployConfirmationSheet(
+                deployment: deployment,
+                accountLabel: model.accountLabel,
+                isSubmitting: isRedeploying,
+                onConfirm: { Task { await performRedeploy() } },
+                onCancel: { showRedeploySheet = false }
+            )
+        }
         .alert("In Zwischenablage kopiert", isPresented: $copyConfirmation) {
             Button("OK", role: .cancel) {}
+        }
+        .alert("Redeploy gestartet", isPresented: Binding(
+            get: { redeploySuccessMessage != nil },
+            set: { if !$0 { redeploySuccessMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(redeploySuccessMessage ?? "")
+        }
+    }
+
+    private func performRedeploy() async {
+        guard !isRedeploying else { return }
+        isRedeploying = true
+        redeployErrorMessage = nil
+        defer {
+            isRedeploying = false
+        }
+
+        do {
+            let result = try await model.redeploy(deployment)
+            showRedeploySheet = false
+            let host = result.url ?? result.id
+            redeploySuccessMessage = "Neues Deployment \(result.id) wurde angelegt (\(host))."
+        } catch {
+            redeployErrorMessage = NetworkUserMessage.text(for: error)
         }
     }
 

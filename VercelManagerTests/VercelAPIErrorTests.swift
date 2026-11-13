@@ -52,6 +52,39 @@ final class RefreshCoordinatorTests: XCTestCase {
     }
 }
 
+final class RedeployRequestBuilderTests: XCTestCase {
+    func testBuildsBodyFromDeployment() throws {
+        let deployment = VercelDeployment(
+            uid: "dpl_test",
+            name: "my-app",
+            url: nil,
+            state: nil,
+            readyState: nil,
+            target: "preview",
+            created: nil,
+            meta: nil
+        )
+        let body = try RedeployRequestBuilder.body(for: deployment)
+        XCTAssertEqual(body, RedeployRequestBuilder.Body(name: "my-app", deploymentId: "dpl_test"))
+    }
+
+    func testMissingProjectNameThrows() {
+        let deployment = VercelDeployment(
+            uid: "dpl_test",
+            name: "  ",
+            url: nil,
+            state: nil,
+            readyState: nil,
+            target: nil,
+            created: nil,
+            meta: nil
+        )
+        XCTAssertThrowsError(try RedeployRequestBuilder.body(for: deployment)) { error in
+            XCTAssertTrue(error is RedeployValidationError)
+        }
+    }
+}
+
 final class DeploymentEventDecodingTests: XCTestCase {
     func testDecodesNestedPayloadEvents() throws {
         let json = """
