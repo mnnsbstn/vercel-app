@@ -16,7 +16,7 @@ struct ProjectDetailView: View {
         do {
             deployments = try await model.deployments(for: project)
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = NetworkUserMessage.text(for: error)
         }
     }
 

@@ -42,8 +42,10 @@ final class AppModel: ObservableObject {
             teams = (try? await api.teams()) ?? []
             reconcileScopeWithTeams()
         } catch {
-            errorMessage = error.localizedDescription
+            if handleUnauthorizedIfNeeded(error) { return }
+            errorMessage = NetworkUserMessage.text(for: error)
         }
+        guard isAuthenticated else { return }
         await refresh()
     }
 
@@ -70,7 +72,8 @@ final class AppModel: ObservableObject {
             isAuthenticated = true
             await refresh()
         } catch {
-            errorMessage = error.localizedDescription
+            if handleUnauthorizedIfNeeded(error) { return }
+            errorMessage = NetworkUserMessage.text(for: error)
         }
     }
 
@@ -91,7 +94,8 @@ final class AppModel: ObservableObject {
             }
             recentDeployments = fetchedDeployments
         } catch {
-            errorMessage = error.localizedDescription
+            if handleUnauthorizedIfNeeded(error) { return }
+            errorMessage = NetworkUserMessage.text(for: error)
         }
     }
 
@@ -106,14 +110,19 @@ final class AppModel: ObservableObject {
 
     func deployments(for project: VercelProject) async throws -> [VercelDeployment] {
         guard let api else { return [] }
-        return try await api.deployments(
-            teamID: activeTeamID,
-            projectID: project.id,
-            limit: 50
-        )
+        do {
+            return try await api.deployments(
+                teamID: activeTeamID,
+                projectID: project.id,
+                limit: 50
+            )
+        } catch {
+            if handleUnauthorizedIfNeeded(error) { return [] }
+            throw error
+        }
     }
 
-    func signOut() {
+    func signOut(sessionMessage: String? = nil) {
         KeychainStore.delete()
         api = nil
         user = nil
@@ -122,9 +131,16 @@ final class AppModel: ObservableObject {
         recentDeployments = []
         scopeID = ""
         UserDefaults.standard.removeObject(forKey: Self.scopeKey)
-        errorMessage = nil
+        errorMessage = sessionMessage
         isAuthenticated = false
         hasBootstrapped = false
+    }
+
+    @discardableResult
+    private func handleUnauthorizedIfNeeded(_ error: Error) -> Bool {
+        guard VercelAPIError.isUnauthorized(error) else { return false }
+        signOut(sessionMessage: NetworkUserMessage.text(for: error))
+        return true
     }
 
     /// Drops a persisted team scope that no longer exists for the signed-in user.

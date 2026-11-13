@@ -5,6 +5,16 @@ enum VercelAPIError: LocalizedError {
     case invalidURL
     case unexpectedStatus(Int, String)
 
+    var httpStatusCode: Int? {
+        if case let .unexpectedStatus(code, _) = self { return code }
+        return nil
+    }
+
+    static func isUnauthorized(_ error: Error) -> Bool {
+        guard let apiError = error as? VercelAPIError else { return false }
+        return apiError.httpStatusCode == 401
+    }
+
     var errorDescription: String? {
         switch self {
         case .invalidResponse:
@@ -121,6 +131,25 @@ struct VercelAPI {
             throw VercelAPIError.unexpectedStatus(httpResponse.statusCode, message)
         }
         return try JSONDecoder().decode(T.self, from: data)
+    }
+}
+
+enum NetworkUserMessage {
+    static func text(for error: Error) -> String {
+        if let apiError = error as? VercelAPIError {
+            return apiError.localizedDescription
+        }
+        if let urlError = error as? URLError {
+            switch urlError.code {
+            case .notConnectedToInternet, .networkConnectionLost:
+                return "Keine Internetverbindung. Bitte Netzwerk prüfen und erneut versuchen."
+            case .timedOut:
+                return "Die Anfrage hat zu lange gedauert. Bitte später erneut versuchen."
+            default:
+                return "Netzwerkfehler. Bitte Verbindung prüfen und erneut versuchen."
+            }
+        }
+        return error.localizedDescription
     }
 }
 

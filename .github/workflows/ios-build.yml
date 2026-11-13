@@ -10,10 +10,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build iOS app
+      - name: Build and test iOS app
         run: |
           xcodebuild -project VercelManager.xcodeproj \
             -scheme VercelManager \
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO build
+            CODE_SIGNING_ALLOWED=NO \
+            build test
