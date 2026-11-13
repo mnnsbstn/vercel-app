@@ -17,6 +17,41 @@ final class VercelAPIErrorTests: XCTestCase {
     }
 }
 
+final class RefreshCoordinatorTests: XCTestCase {
+    func testAppliesWhenGenerationAndScopeMatch() {
+        XCTAssertTrue(
+            RefreshCoordinator.shouldApply(
+                requestGeneration: 2,
+                currentGeneration: 2,
+                scopeAtStart: "team_a",
+                currentScopeID: "team_a"
+            )
+        )
+    }
+
+    func testRejectsSupersededGeneration() {
+        XCTAssertFalse(
+            RefreshCoordinator.shouldApply(
+                requestGeneration: 1,
+                currentGeneration: 2,
+                scopeAtStart: "team_a",
+                currentScopeID: "team_a"
+            )
+        )
+    }
+
+    func testRejectsScopeChangeDuringRequest() {
+        XCTAssertFalse(
+            RefreshCoordinator.shouldApply(
+                requestGeneration: 2,
+                currentGeneration: 2,
+                scopeAtStart: "team_a",
+                currentScopeID: ""
+            )
+        )
+    }
+}
+
 final class NetworkUserMessageTests: XCTestCase {
     func testOfflineMessage() {
         let message = NetworkUserMessage.text(for: URLError(.notConnectedToInternet))

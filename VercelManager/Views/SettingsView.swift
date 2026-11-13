@@ -24,7 +24,7 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.navigationLink)
-                    .disabled(model.isRefreshing)
+                    .disabled(model.isRefreshing || model.isConnecting)
                 }
 
                 Section("SICHERHEIT") {
