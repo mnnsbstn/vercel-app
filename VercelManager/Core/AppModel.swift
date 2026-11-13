@@ -40,6 +40,7 @@ final class AppModel: ObservableObject {
         do {
             user = try await api.user()
             teams = (try? await api.teams()) ?? []
+            reconcileScopeWithTeams()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -65,6 +66,7 @@ final class AppModel: ObservableObject {
             api = client
             user = verifiedUser
             teams = (try? await client.teams()) ?? []
+            reconcileScopeWithTeams()
             isAuthenticated = true
             await refresh()
         } catch {
@@ -118,8 +120,19 @@ final class AppModel: ObservableObject {
         teams = []
         projects = []
         recentDeployments = []
+        scopeID = ""
+        UserDefaults.standard.removeObject(forKey: Self.scopeKey)
         errorMessage = nil
         isAuthenticated = false
         hasBootstrapped = false
+    }
+
+    /// Drops a persisted team scope that no longer exists for the signed-in user.
+    private func reconcileScopeWithTeams() {
+        guard !scopeID.isEmpty else { return }
+        if !teams.contains(where: { $0.id == scopeID }) {
+            scopeID = ""
+            UserDefaults.standard.set("", forKey: Self.scopeKey)
+        }
     }
 }
