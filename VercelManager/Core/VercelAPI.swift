@@ -54,14 +54,16 @@ struct VercelAPI {
         return response.teams
     }
 
-    func projects(teamID: String?) async throws -> [VercelProject] {
+    /// `GET /v9/projects` with cursor pagination (`from`), capped by `ProjectsPagination.maxPages`.
+    func projects(teamID: String?) async throws -> ProjectsFetchResult {
         var all: [VercelProject] = []
         var cursor: String?
         var usedCursors = Set<String>()
+        var loadedPages = 0
+        var hasMorePages = false
 
-        // Avoid an unbounded request loop if the remote pagination is malformed.
-        for _ in 0..<10 {
-            var query = [URLQueryItem(name: "limit", value: "100")]
+        for pageIndex in 0..<ProjectsPagination.maxPages {
+            var query = [URLQueryItem(name: "limit", value: String(ProjectsPagination.pageSize))]
             if let cursor {
                 query.append(URLQueryItem(name: "from", value: cursor))
             }
@@ -70,15 +72,30 @@ struct VercelAPI {
                 "/v9/projects", teamID: teamID, query: query
             )
             all.append(contentsOf: response.projects)
+            loadedPages += 1
 
-            guard let next = response.pagination?.next?.value,
-                  !next.isEmpty, !usedCursors.contains(next) else {
+            let next = response.pagination?.next?.value
+            let hasNext = {
+                guard let next, !next.isEmpty else { return false }
+                return !usedCursors.contains(next)
+            }()
+
+            if ProjectsPagination.isTruncatedAfterPage(pageIndex: pageIndex, hasNextCursor: hasNext) {
+                hasMorePages = true
+                break
+            }
+            guard ProjectsPagination.shouldFetchAnotherPage(pageIndex: pageIndex, hasNextCursor: hasNext),
+                  let next else {
                 break
             }
             usedCursors.insert(next)
             cursor = next
         }
-        return all
+        return ProjectsFetchResult(
+            projects: all,
+            loadedPages: loadedPages,
+            hasMorePages: hasMorePages
+        )
     }
 
     func deployments(

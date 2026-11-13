@@ -52,6 +52,26 @@ final class RefreshCoordinatorTests: XCTestCase {
     }
 }
 
+final class ProjectCatalogTests: XCTestCase {
+    func testSearchMatchesNameAndFramework() {
+        let projects = [
+            VercelProject(id: "a", name: "alpha-web", framework: "Next.js", updatedAt: nil),
+            VercelProject(id: "b", name: "beta", framework: "Nuxt", updatedAt: nil),
+        ]
+        XCTAssertEqual(ProjectSearchFilter.matching(projects, query: "next").count, 1)
+        XCTAssertEqual(ProjectSearchFilter.matching(projects, query: "alpha").count, 1)
+        XCTAssertEqual(ProjectSearchFilter.matching(projects, query: "  ").count, 2)
+        XCTAssertTrue(ProjectSearchFilter.matching(projects, query: "zzz").isEmpty)
+    }
+
+    func testPaginationStopsAtCap() {
+        XCTAssertTrue(ProjectsPagination.shouldFetchAnotherPage(pageIndex: 0, hasNextCursor: true))
+        XCTAssertFalse(ProjectsPagination.shouldFetchAnotherPage(pageIndex: 9, hasNextCursor: true))
+        XCTAssertTrue(ProjectsPagination.isTruncatedAfterPage(pageIndex: 9, hasNextCursor: true))
+        XCTAssertFalse(ProjectsPagination.isTruncatedAfterPage(pageIndex: 9, hasNextCursor: false))
+    }
+}
+
 final class RedeployRequestBuilderTests: XCTestCase {
     func testBuildsBodyFromDeployment() throws {
         let deployment = VercelDeployment(

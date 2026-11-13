@@ -130,6 +130,11 @@ struct ProjectRow: View {
                 Text(project.framework ?? "Kein Framework angegeben")
                     .font(.caption)
                     .foregroundStyle(AppStyle.secondaryText)
+                if let updated = project.updatedAt {
+                    Text("Aktualisiert \(updated.vercelDate, style: .relative)")
+                        .font(.caption2)
+                        .foregroundStyle(AppStyle.secondaryText.opacity(0.85))
+                }
             }
             Spacer(minLength: 4)
             Image(systemName: "chevron.right")

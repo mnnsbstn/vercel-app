@@ -45,7 +45,7 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 
 - GET /v2/user
 - GET /v2/teams
-- GET /v9/projects?limit=100
+- GET /v9/projects?limit=100&from=… (Pagination, App-Limit: 10 Seiten = max. 1.000 Projekte)
 - GET /v6/deployments?limit=40
 - GET /v6/deployments?projectId=...&limit=50
 - GET /v3/deployments/{id}/events?direction=backward&limit=200 (Build-Logs)
