@@ -28,6 +28,12 @@ struct VercelProject: Decodable, Identifiable, Hashable {
     let updatedAt: Double?
 }
 
+struct VercelDeploymentMeta: Decodable, Hashable {
+    let githubCommitMessage: String?
+    let githubCommitSha: String?
+    let githubCommitRef: String?
+}
+
 struct VercelDeployment: Decodable, Identifiable, Hashable {
     let uid: String
     let name: String?
@@ -36,8 +42,24 @@ struct VercelDeployment: Decodable, Identifiable, Hashable {
     let readyState: String?
     let target: String?
     let created: Double?
+    let meta: VercelDeploymentMeta?
 
     var id: String { uid }
+
+    var isProductionTarget: Bool {
+        target == "production"
+    }
+
+    var versionSummary: String? {
+        if let sha = meta?.githubCommitSha {
+            let short = String(sha.prefix(7))
+            if let message = meta?.githubCommitMessage, !message.isEmpty {
+                return "\(short) · \(message)"
+            }
+            return short
+        }
+        return meta?.githubCommitMessage
+    }
 
     var currentState: String {
         (readyState ?? state ?? "UNKNOWN").uppercased()
@@ -85,6 +107,39 @@ struct ProjectsResponse: Decodable {
 
 struct DeploymentsResponse: Decodable {
     let deployments: [VercelDeployment]
+}
+
+struct VercelRedeployResult: Decodable {
+    let id: String
+    let url: String?
+    let readyState: String?
+    let name: String?
+}
+
+enum RedeployValidationError: LocalizedError {
+    case missingProjectName
+
+    var errorDescription: String? {
+        switch self {
+        case .missingProjectName:
+            return "Für ein Redeploy fehlt der Projektname in den Deployment-Daten."
+        }
+    }
+}
+
+enum RedeployRequestBuilder {
+    struct Body: Encodable, Equatable {
+        let name: String
+        let deploymentId: String
+    }
+
+    static func body(for deployment: VercelDeployment) throws -> Body {
+        guard let projectName = deployment.name?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !projectName.isEmpty else {
+            throw RedeployValidationError.missingProjectName
+        }
+        return Body(name: projectName, deploymentId: deployment.uid)
+    }
 }
 
 struct FlexibleVercelTimestamp: Decodable {

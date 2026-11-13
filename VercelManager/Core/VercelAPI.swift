@@ -113,6 +113,51 @@ struct VercelAPI {
         return try VercelDeploymentEvent.decodeList(from: data)
     }
 
+    /// Redeploy via `POST /v13/deployments` with `deploymentId` (settings inherited from source).
+    func redeploy(deployment: VercelDeployment, teamID: String?) async throws -> VercelRedeployResult {
+        let body = try RedeployRequestBuilder.body(for: deployment)
+        return try await post("/v13/deployments", teamID: teamID, body: body)
+    }
+
+    private func post<Body: Encodable, T: Decodable>(
+        _ path: String,
+        teamID: String? = nil,
+        body: Body,
+        timeout: TimeInterval = 60
+    ) async throws -> T {
+        guard var components = URLComponents(string: baseURL + path) else {
+            throw VercelAPIError.invalidURL
+        }
+        var items: [URLQueryItem] = []
+        if let teamID, !teamID.isEmpty {
+            items.append(URLQueryItem(name: "teamId", value: teamID))
+        }
+        components.queryItems = items.isEmpty ? nil : items
+
+        guard let url = components.url else { throw VercelAPIError.invalidURL }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.timeoutInterval = timeout
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(body)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw VercelAPIError.invalidResponse
+        }
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let payload = try? JSONDecoder().decode(APIErrorBody.self, from: data)
+            let message = payload?.error.message ?? HTTPURLResponse.localizedString(
+                forStatusCode: httpResponse.statusCode
+            )
+            throw VercelAPIError.unexpectedStatus(httpResponse.statusCode, message)
+        }
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+
     private func getData(
         _ path: String,
         teamID: String? = nil,
