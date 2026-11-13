@@ -5,6 +5,8 @@ struct ProjectDetailView: View {
     let project: VercelProject
 
     @State private var deployments: [VercelDeployment] = []
+    @State private var hasMoreDeployments = false
+    @State private var loadedDeploymentPages = 0
     @State private var loading = false
     @State private var errorMessage: String?
 
@@ -14,7 +16,10 @@ struct ProjectDetailView: View {
         defer { loading = false }
 
         do {
-            deployments = try await model.deployments(for: project)
+            let page = try await model.deployments(for: project)
+            deployments = page.deployments
+            hasMoreDeployments = page.hasMorePages
+            loadedDeploymentPages = page.loadedPages
         } catch {
             errorMessage = NetworkUserMessage.text(for: error)
         }
@@ -52,6 +57,21 @@ struct ProjectDetailView: View {
                     ErrorNotice(message: errorMessage)
                 }
 
+                if !deployments.isEmpty {
+                    Text(projectDeploymentsSummary)
+                        .font(.caption)
+                        .foregroundStyle(AppStyle.secondaryText)
+                }
+
+                if hasMoreDeployments {
+                    Label(
+                        "Weitere Deployments existieren (App-Limit: \(DeploymentsPagination.maxProjectDeployments)).",
+                        systemImage: "info.circle"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                }
+
                 if deployments.isEmpty && !loading {
                     EmptyNotice(
                         title: "Keine Deployments gefunden",
@@ -77,5 +97,13 @@ struct ProjectDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task(id: model.scopeID) { await load() }
         .refreshable { await load() }
+    }
+
+    private var projectDeploymentsSummary: String {
+        var parts = ["\(deployments.count) Deployment\(deployments.count == 1 ? "" : "s")"]
+        if loadedDeploymentPages > 1 {
+            parts.append("\(loadedDeploymentPages) API-Seiten")
+        }
+        return parts.joined(separator: " · ")
     }
 }

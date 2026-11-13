@@ -51,8 +51,18 @@ struct DeploymentDetailView: View {
                         .font(.system(size: 30, weight: .bold))
                     StatusBadge(state: deployment.currentState)
 
+                    infoRow("Projekt", deployment.name ?? "Unbekannt")
                     infoRow("Umgebung", deployment.environmentLabel)
+                    if let branch = deployment.branchLabel {
+                        infoRow("Branch", branch)
+                    }
+                    if let version = deployment.versionSummary {
+                        infoRow("Version", version)
+                    }
                     infoRow("Deployment-ID", deployment.uid)
+                    if let projectId = deployment.projectId {
+                        infoRow("Projekt-ID", projectId)
+                    }
 
                     if let created = deployment.created {
                         infoRow(
