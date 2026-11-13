@@ -4,7 +4,6 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 
 ## Entwicklung in Cursor (13.–27. November 2026)
 
-- **[Cursor Master Prompt](docs/CURSOR_MASTER_PROMPT.md)** – vollständiger Entwicklungsauftrag, Scope, Qualitätskriterien und 14-Tage-Plan.
 - **[AGENTS.md](AGENTS.md)** – automatisch gelesene, dauerhaft geltende Cursor-Agentenregeln.
 - **[Linear-Projekt P-SBSTN-4](https://linear.app/mnnsbstn/project/vercel-manager-985f75483227)** – 4 Meilensteine, 20 Issues, Fristen und Abhängigkeiten.
 - **Release-Ziel:** 27.11.2026: privat auf echtem iPhone getestete Version `v1.0.0` (kein garantierter App-Store-Release).
