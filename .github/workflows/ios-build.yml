@@ -12,9 +12,25 @@ jobs:
         uses: actions/checkout@v4
       - name: Build and test iOS app
         run: |
+          set -euo pipefail
           xcodebuild -project VercelManager.xcodeproj \
             -scheme VercelManager \
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
-            build test
+            build
+
+          SIMULATOR_ID="$(
+            xcrun simctl list devices available | grep -E '^\s+iPhone' | head -1 | grep -oE '[0-9A-F-]{36}' || true
+          )"
+          if [ -z "${SIMULATOR_ID}" ]; then
+            echo "No available iPhone simulator found"
+            exit 1
+          fi
+
+          xcodebuild -project VercelManager.xcodeproj \
+            -scheme VercelManager \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=${SIMULATOR_ID}" \
+            CODE_SIGNING_ALLOWED=NO \
+            test -only-testing:VercelManagerTests

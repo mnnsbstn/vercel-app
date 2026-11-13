@@ -15,6 +15,7 @@ final class AppModel: ObservableObject {
 
     private var api: VercelAPI?
     private var hasBootstrapped = false
+    private var refreshGeneration: UInt = 0
     private static let scopeKey = "vercelmanager.scopeID"
 
     init() {
@@ -78,44 +79,79 @@ final class AppModel: ObservableObject {
     }
 
     func refresh() async {
-        guard let api, !isRefreshing else { return }
-        isRefreshing = true
-        errorMessage = nil
-        defer { isRefreshing = false }
+        guard let api else { return }
+        refreshGeneration &+= 1
 
-        do {
-            async let loadedProjects = api.projects(teamID: activeTeamID)
-            async let loadedDeployments = api.deployments(teamID: activeTeamID)
+        while true {
+            let generation = refreshGeneration
+            let scopeAtStart = scopeID
+            let teamIDAtStart = activeTeamID
+            isRefreshing = true
+            errorMessage = nil
 
-            let fetchedProjects = try await loadedProjects
-            let fetchedDeployments = try await loadedDeployments
-            projects = fetchedProjects.sorted {
-                $0.name.localizedStandardCompare($1.name) == .orderedAscending
+            do {
+                async let loadedProjects = api.projects(teamID: teamIDAtStart)
+                async let loadedDeployments = api.deployments(teamID: teamIDAtStart)
+
+                let fetchedProjects = try await loadedProjects
+                let fetchedDeployments = try await loadedDeployments
+
+                guard RefreshCoordinator.shouldApply(
+                    requestGeneration: generation,
+                    currentGeneration: refreshGeneration,
+                    scopeAtStart: scopeAtStart,
+                    currentScopeID: scopeID
+                ) else {
+                    continue
+                }
+
+                projects = fetchedProjects.sorted {
+                    $0.name.localizedStandardCompare($1.name) == .orderedAscending
+                }
+                recentDeployments = fetchedDeployments
+            } catch {
+                guard RefreshCoordinator.shouldApply(
+                    requestGeneration: generation,
+                    currentGeneration: refreshGeneration,
+                    scopeAtStart: scopeAtStart,
+                    currentScopeID: scopeID
+                ) else {
+                    continue
+                }
+                if handleUnauthorizedIfNeeded(error) { return }
+                errorMessage = NetworkUserMessage.text(for: error)
             }
-            recentDeployments = fetchedDeployments
-        } catch {
-            if handleUnauthorizedIfNeeded(error) { return }
-            errorMessage = NetworkUserMessage.text(for: error)
+
+            if generation == refreshGeneration {
+                isRefreshing = false
+                break
+            }
         }
     }
 
     func selectScope(_ newScope: String) async {
         guard newScope != scopeID else { return }
+        refreshGeneration &+= 1
         scopeID = newScope
         UserDefaults.standard.set(newScope, forKey: Self.scopeKey)
         projects = []
         recentDeployments = []
+        errorMessage = nil
         await refresh()
     }
 
     func deployments(for project: VercelProject) async throws -> [VercelDeployment] {
         guard let api else { return [] }
+        let scopeAtStart = scopeID
+        let teamIDAtStart = activeTeamID
         do {
-            return try await api.deployments(
-                teamID: activeTeamID,
+            let result = try await api.deployments(
+                teamID: teamIDAtStart,
                 projectID: project.id,
                 limit: 50
             )
+            guard scopeAtStart == scopeID else { return [] }
+            return result
         } catch {
             if handleUnauthorizedIfNeeded(error) { return [] }
             throw error
@@ -123,6 +159,7 @@ final class AppModel: ObservableObject {
     }
 
     func signOut(sessionMessage: String? = nil) {
+        refreshGeneration &+= 1
         KeychainStore.delete()
         api = nil
         user = nil
