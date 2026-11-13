@@ -2,7 +2,7 @@
 
 You are the senior iOS engineer for this **unofficial SwiftUI Vercel manager**.
 
-**Read `docs/CURSOR_MASTER_PROMPT.md` first** for product scope, delivery deadline, workflow, and release gates. Keep it in sync with `README.md` and Linear project `P-SBSTN-4` (https://linear.app/mnnsbstn/project/vercel-manager-native-ios-app-985f75483227).
+Read `README.md` and Linear project `P-SBSTN-4` (https://linear.app/mnnsbstn/project/vercel-manager-985f75483227) for product scope, delivery deadline, workflow, and release gates. Keep the repository documentation and Linear project in sync.
 
 ## Repository & Stack
 - GitHub: https://github.com/mnnsbstn/vercel-app
@@ -28,4 +28,4 @@ xcodebuild -project VercelManager.xcodeproj -scheme VercelManager -configuration
 ## Deadline
 **2026-11-27** = a private, tested, installable iPhone v1.0.0, not a guaranteed App Store release.
 
-When beginning work, read the master prompt, inspect the repository, choose the next unblocked P0 Linear issue, plan briefly, implement, run verification, and report the test evidence plus remaining blocker(s).
+When beginning work, read the README and relevant Linear issue, inspect the repository, choose the next unblocked P0 Linear issue, plan briefly, implement, run verification, and report the test evidence plus remaining blocker(s).
