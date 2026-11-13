@@ -98,19 +98,65 @@ struct VercelAPI {
         )
     }
 
+    /// `GET /v6/deployments` with `until` cursor pagination (newest first per page).
     func deployments(
         teamID: String?,
         projectID: String? = nil,
-        limit: Int = 40
-    ) async throws -> [VercelDeployment] {
-        var query = [URLQueryItem(name: "limit", value: String(min(max(limit, 1), 100)))]
-        if let projectID {
-            query.append(URLQueryItem(name: "projectId", value: projectID))
+        maxPages: Int = DeploymentsPagination.maxPagesAccount
+    ) async throws -> DeploymentsFetchResult {
+        var all: [VercelDeployment] = []
+        var until: String?
+        var usedUntil = Set<String>()
+        var loadedPages = 0
+        var hasMorePages = false
+
+        for pageIndex in 0..<maxPages {
+            var query = [
+                URLQueryItem(name: "limit", value: String(DeploymentsPagination.pageSize)),
+            ]
+            if let projectID {
+                query.append(URLQueryItem(name: "projectId", value: projectID))
+            }
+            if let until {
+                query.append(URLQueryItem(name: "until", value: until))
+            }
+
+            let response: DeploymentsResponse = try await get(
+                "/v6/deployments", teamID: teamID, query: query
+            )
+            all.append(contentsOf: response.deployments)
+            loadedPages += 1
+
+            let next = response.pagination?.next?.value
+            let hasNext = {
+                guard let next, !next.isEmpty else { return false }
+                return !usedUntil.contains(next)
+            }()
+
+            if DeploymentsPagination.isTruncatedAfterPage(
+                pageIndex: pageIndex,
+                maxPages: maxPages,
+                hasNextCursor: hasNext
+            ) {
+                hasMorePages = true
+                break
+            }
+            guard DeploymentsPagination.shouldFetchAnotherPage(
+                pageIndex: pageIndex,
+                maxPages: maxPages,
+                hasNextCursor: hasNext
+            ), let next else {
+                break
+            }
+            usedUntil.insert(next)
+            until = next
         }
-        let response: DeploymentsResponse = try await get(
-            "/v6/deployments", teamID: teamID, query: query
+
+        return DeploymentsFetchResult(
+            deployments: all.sortedByNewest(),
+            loadedPages: loadedPages,
+            hasMorePages: hasMorePages
         )
-        return response.deployments
     }
 
     /// Build output via official `GET /v3/deployments/{idOrUrl}/events` (JSON, not live stream).

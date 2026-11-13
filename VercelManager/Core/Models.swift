@@ -43,11 +43,17 @@ struct VercelDeployment: Decodable, Identifiable, Hashable {
     let target: String?
     let created: Double?
     let meta: VercelDeploymentMeta?
+    let projectId: String?
 
     var id: String { uid }
 
     var isProductionTarget: Bool {
-        target == "production"
+        target?.lowercased() == "production"
+    }
+
+    var branchLabel: String? {
+        guard let ref = meta?.githubCommitRef, !ref.isEmpty else { return nil }
+        return ref
     }
 
     var versionSummary: String? {
@@ -66,7 +72,50 @@ struct VercelDeployment: Decodable, Identifiable, Hashable {
     }
 
     var environmentLabel: String {
-        target == "production" ? "Production" : "Preview"
+        DeploymentEnvironmentLabel.label(for: target)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case uid, name, url, state, readyState, target, created, createdAt, meta, projectId
+    }
+
+    init(
+        uid: String,
+        name: String? = nil,
+        url: String? = nil,
+        state: String? = nil,
+        readyState: String? = nil,
+        target: String? = nil,
+        created: Double? = nil,
+        meta: VercelDeploymentMeta? = nil,
+        projectId: String? = nil
+    ) {
+        self.uid = uid
+        self.name = name
+        self.url = url
+        self.state = state
+        self.readyState = readyState
+        self.target = target
+        self.created = created
+        self.meta = meta
+        self.projectId = projectId
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        uid = try container.decode(String.self, forKey: .uid)
+        name = try container.decodeIfPresent(String.self, forKey: .name)
+        url = try container.decodeIfPresent(String.self, forKey: .url)
+        state = try container.decodeIfPresent(String.self, forKey: .state)
+        readyState = try container.decodeIfPresent(String.self, forKey: .readyState)
+        target = try container.decodeIfPresent(String.self, forKey: .target)
+        meta = try container.decodeIfPresent(VercelDeploymentMeta.self, forKey: .meta)
+        projectId = try container.decodeIfPresent(String.self, forKey: .projectId)
+        if let timestamp = try container.decodeIfPresent(Double.self, forKey: .created) {
+            created = timestamp
+        } else {
+            created = try container.decodeIfPresent(Double.self, forKey: .createdAt)
+        }
     }
 
     var deploymentURL: URL? {
@@ -107,6 +156,7 @@ struct ProjectsResponse: Decodable {
 
 struct DeploymentsResponse: Decodable {
     let deployments: [VercelDeployment]
+    let pagination: Pagination?
 }
 
 struct VercelRedeployResult: Decodable {

@@ -28,6 +28,7 @@ struct StatusBadge: View {
         case "READY": return .green
         case "ERROR", "CANCELED": return .red
         case "BUILDING", "INITIALIZING", "QUEUED": return .orange
+        case "BLOCKED": return .purple
         default: return .gray
         }
     }
@@ -40,6 +41,7 @@ struct StatusBadge: View {
         case "BUILDING": return "Build läuft"
         case "QUEUED": return "In Warteschlange"
         case "INITIALIZING": return "Initialisierung"
+        case "BLOCKED": return "Blockiert"
         default: return state.capitalized
         }
     }
@@ -89,9 +91,16 @@ struct DeploymentRow: View {
                         .font(.headline)
                         .foregroundStyle(.white)
                         .lineLimit(1)
-                    Text(deployment.environmentLabel)
-                        .font(.caption)
-                        .foregroundStyle(AppStyle.secondaryText)
+                    HStack(spacing: 6) {
+                        Text(deployment.environmentLabel)
+                        if let branch = deployment.branchLabel {
+                            Text("·")
+                            Text(branch)
+                                .lineLimit(1)
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundStyle(AppStyle.secondaryText)
                 }
                 Spacer(minLength: 8)
                 StatusBadge(state: deployment.currentState)

@@ -40,6 +40,21 @@ struct DashboardView: View {
                         ErrorNotice(message: error)
                     }
 
+                    if let summary = model.deploymentsLoadSummary {
+                        Text(summary)
+                            .font(.caption)
+                            .foregroundStyle(AppStyle.secondaryText)
+                    }
+
+                    if model.deploymentsHasMorePages {
+                        Label(
+                            "Nicht alle Account-Deployments geladen (max. \(DeploymentsPagination.maxAccountDeployments)).",
+                            systemImage: "info.circle"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                    }
+
                     HStack {
                         Text("Aktuelle Deployments")
                             .font(.title3.weight(.semibold))
@@ -57,7 +72,7 @@ struct DashboardView: View {
                         )
                     } else {
                         LazyVStack(spacing: 11) {
-                            ForEach(model.recentDeployments.prefix(20)) { deployment in
+                            ForEach(model.recentDeployments) { deployment in
                                 NavigationLink {
                                     DeploymentDetailView(deployment: deployment)
                                 } label: {

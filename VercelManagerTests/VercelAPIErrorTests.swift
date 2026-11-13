@@ -52,6 +52,31 @@ final class RefreshCoordinatorTests: XCTestCase {
     }
 }
 
+final class DeploymentsCatalogTests: XCTestCase {
+    func testEnvironmentLabels() {
+        XCTAssertEqual(DeploymentEnvironmentLabel.label(for: "production"), "Production")
+        XCTAssertEqual(DeploymentEnvironmentLabel.label(for: "staging"), "Staging")
+        XCTAssertEqual(DeploymentEnvironmentLabel.label(for: nil), "Preview")
+        XCTAssertEqual(DeploymentEnvironmentLabel.label(for: ""), "Preview")
+    }
+
+    func testDeploymentDecodingAcceptsCreatedAtAlias() throws {
+        let json = """
+        {
+          "uid": "dpl_x",
+          "name": "demo",
+          "target": null,
+          "createdAt": 1700000000000,
+          "meta": { "githubCommitRef": "main" }
+        }
+        """.data(using: .utf8)!
+        let deployment = try JSONDecoder().decode(VercelDeployment.self, from: json)
+        XCTAssertEqual(deployment.environmentLabel, "Preview")
+        XCTAssertEqual(deployment.branchLabel, "main")
+        XCTAssertNotNil(deployment.created)
+    }
+}
+
 final class ProjectCatalogTests: XCTestCase {
     func testSearchMatchesNameAndFramework() {
         let projects = [

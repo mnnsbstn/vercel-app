@@ -12,6 +12,8 @@ final class AppModel: ObservableObject {
     @Published private(set) var projectsHasMorePages = false
     @Published private(set) var projectsLoadedPages = 0
     @Published private(set) var recentDeployments: [VercelDeployment] = []
+    @Published private(set) var deploymentsHasMorePages = false
+    @Published private(set) var deploymentsLoadedPages = 0
     @Published private(set) var scopeID: String
     @Published var errorMessage: String?
 
@@ -93,10 +95,13 @@ final class AppModel: ObservableObject {
 
             do {
                 async let loadedProjects = api.projects(teamID: teamIDAtStart)
-                async let loadedDeployments = api.deployments(teamID: teamIDAtStart)
+                async let loadedDeployments = api.deployments(
+                    teamID: teamIDAtStart,
+                    maxPages: DeploymentsPagination.maxPagesAccount
+                )
 
                 let projectPage = try await loadedProjects
-                let fetchedDeployments = try await loadedDeployments
+                let deploymentPage = try await loadedDeployments
 
                 guard RefreshCoordinator.shouldApply(
                     requestGeneration: generation,
@@ -112,7 +117,9 @@ final class AppModel: ObservableObject {
                 }
                 projectsHasMorePages = projectPage.hasMorePages
                 projectsLoadedPages = projectPage.loadedPages
-                recentDeployments = fetchedDeployments
+                recentDeployments = deploymentPage.deployments
+                deploymentsHasMorePages = deploymentPage.hasMorePages
+                deploymentsLoadedPages = deploymentPage.loadedPages
             } catch {
                 guard RefreshCoordinator.shouldApply(
                     requestGeneration: generation,
@@ -142,8 +149,24 @@ final class AppModel: ObservableObject {
         projectsHasMorePages = false
         projectsLoadedPages = 0
         recentDeployments = []
+        deploymentsHasMorePages = false
+        deploymentsLoadedPages = 0
         errorMessage = nil
         await refresh()
+    }
+
+    var deploymentsLoadSummary: String? {
+        guard !recentDeployments.isEmpty else { return nil }
+        var parts = ["\(recentDeployments.count) Deployment\(recentDeployments.count == 1 ? "" : "s")"]
+        if deploymentsLoadedPages > 1 {
+            parts.append("\(deploymentsLoadedPages) API-Seiten")
+        }
+        if deploymentsHasMorePages {
+            parts.append(
+                "Limit: max. \(DeploymentsPagination.maxAccountDeployments) — ältere Deployments fehlen"
+            )
+        }
+        return parts.joined(separator: " · ")
     }
 
     var projectsLoadSummary: String? {
@@ -193,20 +216,26 @@ final class AppModel: ObservableObject {
         }
     }
 
-    func deployments(for project: VercelProject) async throws -> [VercelDeployment] {
-        guard let api else { return [] }
+    func deployments(for project: VercelProject) async throws -> DeploymentsFetchResult {
+        guard let api else {
+            return DeploymentsFetchResult(deployments: [], loadedPages: 0, hasMorePages: false)
+        }
         let scopeAtStart = scopeID
         let teamIDAtStart = activeTeamID
         do {
             let result = try await api.deployments(
                 teamID: teamIDAtStart,
                 projectID: project.id,
-                limit: 50
+                maxPages: DeploymentsPagination.maxPagesProject
             )
-            guard scopeAtStart == scopeID else { return [] }
+            guard scopeAtStart == scopeID else {
+                return DeploymentsFetchResult(deployments: [], loadedPages: 0, hasMorePages: false)
+            }
             return result
         } catch {
-            if handleUnauthorizedIfNeeded(error) { return [] }
+            if handleUnauthorizedIfNeeded(error) {
+                return DeploymentsFetchResult(deployments: [], loadedPages: 0, hasMorePages: false)
+            }
             throw error
         }
     }
@@ -221,6 +250,8 @@ final class AppModel: ObservableObject {
         projectsHasMorePages = false
         projectsLoadedPages = 0
         recentDeployments = []
+        deploymentsHasMorePages = false
+        deploymentsLoadedPages = 0
         scopeID = ""
         UserDefaults.standard.removeObject(forKey: Self.scopeKey)
         errorMessage = sessionMessage
