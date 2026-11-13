@@ -52,6 +52,32 @@ final class RefreshCoordinatorTests: XCTestCase {
     }
 }
 
+final class DeploymentEventDecodingTests: XCTestCase {
+    func testDecodesNestedPayloadEvents() throws {
+        let json = """
+        [
+          {
+            "type": "stdout",
+            "created": 1700000000000,
+            "payload": {
+              "text": "Build completed",
+              "type": "stdout"
+            }
+          },
+          {
+            "type": "stderr",
+            "text": "warning: optional step"
+          }
+        ]
+        """.data(using: .utf8)!
+
+        let events = try VercelDeploymentEvent.decodeList(from: json)
+        XCTAssertEqual(events.count, 2)
+        XCTAssertTrue(events.contains { $0.message == "Build completed" })
+        XCTAssertTrue(events.contains { $0.message == "warning: optional step" })
+    }
+}
+
 final class NetworkUserMessageTests: XCTestCase {
     func testOfflineMessage() {
         let message = NetworkUserMessage.text(for: URLError(.notConnectedToInternet))

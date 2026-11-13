@@ -96,15 +96,32 @@ struct VercelAPI {
         return response.deployments
     }
 
-    private func get<T: Decodable>(
+    /// Build output via official `GET /v3/deployments/{idOrUrl}/events` (JSON, not live stream).
+    func deploymentEvents(
+        deploymentID: String,
+        teamID: String?,
+        limit: Int = 200
+    ) async throws -> [VercelDeploymentEvent] {
+        let capped = min(max(limit, 1), 500)
+        let query = [
+            URLQueryItem(name: "direction", value: "backward"),
+            URLQueryItem(name: "limit", value: String(capped)),
+            URLQueryItem(name: "delimiter", value: "0"),
+        ]
+        let path = "/v3/deployments/\(deploymentID)/events"
+        let data = try await getData(path, teamID: teamID, query: query, timeout: 45)
+        return try VercelDeploymentEvent.decodeList(from: data)
+    }
+
+    private func getData(
         _ path: String,
         teamID: String? = nil,
-        query: [URLQueryItem] = []
-    ) async throws -> T {
+        query: [URLQueryItem] = [],
+        timeout: TimeInterval = 25
+    ) async throws -> Data {
         guard var components = URLComponents(string: baseURL + path) else {
             throw VercelAPIError.invalidURL
         }
-
         var items = query
         if let teamID, !teamID.isEmpty {
             items.append(URLQueryItem(name: "teamId", value: teamID))
@@ -114,7 +131,7 @@ struct VercelAPI {
         guard let url = components.url else { throw VercelAPIError.invalidURL }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.timeoutInterval = 25
+        request.timeoutInterval = timeout
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.cachePolicy = .reloadIgnoringLocalCacheData
@@ -130,6 +147,15 @@ struct VercelAPI {
             )
             throw VercelAPIError.unexpectedStatus(httpResponse.statusCode, message)
         }
+        return data
+    }
+
+    private func get<T: Decodable>(
+        _ path: String,
+        teamID: String? = nil,
+        query: [URLQueryItem] = []
+    ) async throws -> T {
+        let data = try await getData(path, teamID: teamID, query: query, timeout: 25)
         return try JSONDecoder().decode(T.self, from: data)
     }
 }

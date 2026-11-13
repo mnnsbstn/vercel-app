@@ -140,6 +140,22 @@ final class AppModel: ObservableObject {
         await refresh()
     }
 
+    func deploymentEvents(for deployment: VercelDeployment) async throws -> [VercelDeploymentEvent] {
+        guard let api else { return [] }
+        let scopeAtStart = scopeID
+        do {
+            let events = try await api.deploymentEvents(
+                deploymentID: deployment.uid,
+                teamID: activeTeamID
+            )
+            guard scopeAtStart == scopeID else { return [] }
+            return events
+        } catch {
+            if handleUnauthorizedIfNeeded(error) { return [] }
+            throw error
+        }
+    }
+
     func deployments(for project: VercelProject) async throws -> [VercelDeployment] {
         guard let api else { return [] }
         let scopeAtStart = scopeID
