@@ -9,18 +9,21 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 - **[Linear-Projekt P-SBSTN-4](https://linear.app/mnnsbstn/project/vercel-manager-985f75483227)** – 4 Meilensteine, 20 Issues, Fristen und Abhängigkeiten.
 - **Release-Ziel:** 27.11.2026: privat auf echtem iPhone getestete Version `v1.0.0` (kein garantierter App-Store-Release).
 
-> Der folgende Funktionsstand beschreibt nur den vorhandenen **MVP 0.1**. Neue Version-1.0-Funktionen sind aktuell als Aufgaben geplant, nicht bereits implementiert.
+- **[CHANGELOG.md](CHANGELOG.md)** – Versionshistorie (aktuell **0.9.0** auf dem Weg zu v1.0.0).
+- **[docs/RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md)** – Smoketest-Checkliste vor Release (SBSTN-133).
 
-## Funktionen (MVP 0.1)
+## Funktionen (Stand `main`, Pre-Release 0.9.x)
 
-- Verbindung mit einem **persönlichen Vercel Access Token**, ausschließlich im iOS Keychain gespeichert
-- Wechsel zwischen persönlichem Vercel-Account und Teams
-- Übersicht und Suche über Projekte, inklusive Framework
-- Liste der letzten Deployments mit Status, Umgebung und Zeitstempel
-- Detailansicht pro Projekt und Deployment sowie Öffnen der Deployment-URL
-- Manuelle Aktualisierung durch Pull-to-Refresh
+- Verbindung mit **Vercel Access Token** (Keychain, `WhenUnlockedThisDeviceOnly`)
+- Persönlicher Account und Teams, robuster Scope-Wechsel
+- Projekte: Suche, Pagination mit dokumentierten Limits
+- Deployments: Pagination, Preview/Staging/Production, Branch/Commit in der UI
+- Build-Logs lesen, kopieren, aktualisieren
+- **Redeploy** nur nach explizitem Bestätigungsdialog (Testprojekt zuerst)
+- 401-Session-Recovery, deutsche Netzwerk-/API-Fehlertexte
+- Unit-Tests + CI (Simulator Build & Test)
 
-**Bewusst noch nicht enthalten:** Redeploy, Rollback, Löschen, Build-Logs und Push-Nachrichten. Die erste Version führt ausschließlich lesende API-Anfragen aus.
+**Nicht in v1.0.0:** Rollback, Löschen, Push, OAuth, Widgets.
 
 ## Installation auf Mac & iPhone
 
@@ -51,7 +54,15 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 - GET /v3/deployments/{id}/events?direction=backward&limit=200 (Build-Logs)
 - POST /v13/deployments `{ name, deploymentId }` (Redeploy nach Bestätigung)
 
-Für Team-Ressourcen wird automatisch `teamId` als Query-Parameter angehängt. Die Projektliste lädt maximal zehn Seiten mit je 100 Projekten, die Dashboard-Deployments maximal 40 Einträge.
+Für Team-Ressourcen wird automatisch `teamId` angehängt. Limits: Projekte max. 1.000, Dashboard-Deployments max. 300, Projekt-Deployments max. 800 — mit UI-Hinweis, wenn Vercel mehr liefert.
+
+## Tests lokal (macOS)
+
+```bash
+xcodebuild -project VercelManager.xcodeproj -scheme VercelManager \
+  -destination 'platform=iOS Simulator,name=iPhone 16' \
+  CODE_SIGNING_ALLOWED=NO test
+```
 
 ## Sicherheit
 

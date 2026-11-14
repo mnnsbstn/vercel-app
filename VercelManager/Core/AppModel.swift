@@ -44,8 +44,13 @@ final class AppModel: ObservableObject {
 
         do {
             user = try await api.user()
-            teams = (try? await api.teams()) ?? []
-            reconcileScopeWithTeams()
+            do {
+                teams = try await api.teams()
+                reconcileScopeWithTeams()
+            } catch {
+                if handleUnauthorizedIfNeeded(error) { return }
+                errorMessage = NetworkUserMessage.text(for: error)
+            }
         } catch {
             if handleUnauthorizedIfNeeded(error) { return }
             errorMessage = NetworkUserMessage.text(for: error)
@@ -72,7 +77,7 @@ final class AppModel: ObservableObject {
 
             api = client
             user = verifiedUser
-            teams = (try? await client.teams()) ?? []
+            teams = try await client.teams()
             reconcileScopeWithTeams()
             isAuthenticated = true
             await refresh()

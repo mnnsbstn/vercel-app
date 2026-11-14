@@ -1,6 +1,6 @@
 # M1 – Technische Prüfliste & Gap-Analyse (SBSTN-120 / SBSTN-121)
 
-Stand: 2026-11-13 · Basis: `main` @ MVP 0.1 · Kein Live-API-Test in der Cloud-Agent-Session (kein Token in der Umgebung).
+Stand: 2026-11-14 · Basis: `main` @ **0.9.0** (PRs #2–#8) · Live-API-Tests nur lokal mit PAT (siehe [docs/RELEASE_SMOKE.md](RELEASE_SMOKE.md)).
 
 ## Setup & Build
 
@@ -9,7 +9,7 @@ Stand: 2026-11-13 · Basis: `main` @ MVP 0.1 · Kein Live-API-Test in der Cloud-
 | Repository-Struktur (`VercelManager.xcodeproj`, Core/Views) | Vorhanden, konsistent |
 | Lokaler `xcodebuild` (Cloud Agent VM, Linux) | **Nicht verfügbar** – kein Xcode/macOS |
 | GitHub Actions `ios-build.yml` auf `xcode-27` | **Grün** für `main` (Runs #1–#4); PR #1 mit Scope-Fix zunächst **rot** (Swift `guard`-Compile-Fehler) |
-| XCTest-Target / `xcodebuild test` | **Fehlt** – nur App-Target, CI führt keine Tests aus |
+| XCTest-Target / `xcodebuild test` | **Vorhanden** – CI führt Build + 15 Unit-Tests aus |
 | `AGENTS.md` | Auf `main` vorhanden |
 | `docs/CURSOR_MASTER_PROMPT.md` | **Entfernt** in `0954e8f`; README verlinkt noch – Link reparieren oder Datei wiederherstellen |
 
