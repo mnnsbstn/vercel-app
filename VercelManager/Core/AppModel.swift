@@ -24,7 +24,7 @@ final class AppModel: ObservableObject {
 
     init() {
         let token = KeychainStore.read()
-        self.api = token.map(VercelAPI.init)
+        self.api = token.map { VercelAPI(token: $0) }
         self.isAuthenticated = token != nil
         self.scopeID = UserDefaults.standard.string(forKey: Self.scopeKey) ?? ""
     }
