@@ -64,6 +64,23 @@ enum VercelAPITestSupport {
         }
         return items.first(where: { $0.name == name })?.value
     }
+
+  /// URLSession often supplies POST data via `httpBodyStream`, not `httpBody`.
+    static func httpBodyData(from request: URLRequest) -> Data? {
+        if let body = request.httpBody, !body.isEmpty { return body }
+        guard let stream = request.httpBodyStream else { return nil }
+        stream.open()
+        defer { stream.close() }
+        var data = Data()
+        let bufferSize = 4096
+        var buffer = [UInt8](repeating: 0, count: bufferSize)
+        while stream.hasBytesAvailable {
+            let read = stream.read(&buffer, maxLength: bufferSize)
+            if read <= 0 { break }
+            data.append(buffer, count: read)
+        }
+        return data.isEmpty ? nil : data
+    }
 }
 
 // MARK: - Integration tests
@@ -163,9 +180,10 @@ final class VercelAPIMockTests: XCTestCase {
         MockVercelURLProtocol.handler = { request in
             XCTAssertEqual(request.httpMethod, "POST")
             XCTAssertEqual(VercelAPITestSupport.queryValue("teamId", in: request), "team_x")
-            let body = request.httpBody.flatMap { String(data: $0, encoding: .utf8) } ?? ""
-            XCTAssertTrue(body.contains("dpl_source"))
-            XCTAssertTrue(body.contains("demo-app"))
+            let payload = try XCTUnwrap(VercelAPITestSupport.httpBodyData(from: request))
+            let redeployBody = try JSONDecoder().decode(RedeployRequestBuilder.Body.self, from: payload)
+            XCTAssertEqual(redeployBody.deploymentId, "dpl_source")
+            XCTAssertEqual(redeployBody.name, "demo-app")
             return try VercelAPITestSupport.jsonResponse(
                 for: request,
                 statusCode: 200,
