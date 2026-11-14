@@ -25,6 +25,15 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.navigationLink)
                     .disabled(model.isRefreshing || model.isConnecting)
+                    .accessibilityHint(
+                        model.isRefreshing
+                            ? "Account wird gerade aktualisiert"
+                            : "Wechselt zwischen persönlichem Account und Teams"
+                    )
+                } footer: {
+                    if model.isRefreshing {
+                        Text("Projekte und Deployments werden für den gewählten Account geladen.")
+                    }
                 }
 
                 Section("SICHERHEIT") {

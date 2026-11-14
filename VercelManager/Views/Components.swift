@@ -33,18 +33,7 @@ struct StatusBadge: View {
         }
     }
 
-    private var label: String {
-        switch state.uppercased() {
-        case "READY": return "Bereit"
-        case "ERROR": return "Fehler"
-        case "CANCELED": return "Abgebrochen"
-        case "BUILDING": return "Build läuft"
-        case "QUEUED": return "In Warteschlange"
-        case "INITIALIZING": return "Initialisierung"
-        case "BLOCKED": return "Blockiert"
-        default: return state.capitalized
-        }
-    }
+    private var label: String { StateCopy.label(for: state) }
 
     var body: some View {
         HStack(spacing: 6) {
@@ -56,6 +45,7 @@ struct StatusBadge: View {
         .padding(.vertical, 7)
         .background(color.opacity(0.12), in: Capsule())
         .accessibilityElement(children: .combine)
+        .accessibilityLabel("Status: \(label)")
     }
 }
 
@@ -63,20 +53,38 @@ struct MetricCard: View {
     let title: String
     let value: String
     let symbol: String
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             Image(systemName: symbol)
                 .font(.title3)
                 .foregroundStyle(AppStyle.secondaryText)
+                .accessibilityHidden(true)
             Text(value)
                 .font(.system(size: 32, weight: .semibold, design: .rounded))
-                .contentTransition(.numericText())
+                .minimumScaleFactor(0.75)
+                .lineLimit(1)
+                .modifier(OptionalNumericTransition(enabled: !reduceMotion))
             Text(title)
                 .font(.footnote)
                 .foregroundStyle(AppStyle.secondaryText)
         }
         .vercelCard()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title): \(value)")
+    }
+}
+
+private struct OptionalNumericTransition: ViewModifier {
+    let enabled: Bool
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content.contentTransition(.numericText())
+        } else {
+            content
+        }
     }
 }
 
@@ -118,6 +126,22 @@ struct DeploymentRow: View {
             .foregroundStyle(AppStyle.secondaryText)
         }
         .vercelCard()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(deploymentAccessibilityLabel)
+        .accessibilityHint("Öffnet Deployment-Details")
+    }
+
+    private var deploymentAccessibilityLabel: String {
+        let name = deployment.name ?? "Deployment"
+        let status = StatusBadge.StateCopy.label(for: deployment.currentState)
+        var parts = [name, status, deployment.environmentLabel]
+        if let branch = deployment.branchLabel {
+            parts.append(branch)
+        }
+        if let created = deployment.created {
+            parts.append("Erstellt \(created.vercelDate.formatted(date: .abbreviated, time: .shortened))")
+        }
+        return parts.joined(separator: ", ")
     }
 }
 
@@ -151,6 +175,18 @@ struct ProjectRow: View {
                 .foregroundStyle(AppStyle.secondaryText)
         }
         .vercelCard()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(projectAccessibilityLabel)
+        .accessibilityHint("Öffnet Projekt-Details")
+    }
+
+    private var projectAccessibilityLabel: String {
+        var parts = [project.name]
+        parts.append(project.framework ?? "Kein Framework angegeben")
+        if let updated = project.updatedAt {
+            parts.append("Aktualisiert \(updated.vercelDate.formatted(date: .abbreviated, time: .shortened))")
+        }
+        return parts.joined(separator: ", ")
     }
 }
 
@@ -163,6 +199,25 @@ struct ErrorNotice: View {
             .foregroundStyle(.orange)
             .frame(maxWidth: .infinity, alignment: .leading)
             .vercelCard()
+            .accessibilityLabel("Hinweis: \(message)")
+    }
+}
+
+struct LoadingNotice: View {
+    let message: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            ProgressView()
+                .tint(.white)
+            Text(message)
+                .font(.subheadline)
+                .foregroundStyle(AppStyle.secondaryText)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 36)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(message)
     }
 }
 
@@ -184,5 +239,24 @@ struct EmptyNotice: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 44)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title). \(message)")
+    }
+}
+
+extension StatusBadge {
+    enum StateCopy {
+        static func label(for state: String) -> String {
+            switch state.uppercased() {
+            case "READY": return "Bereit"
+            case "ERROR": return "Fehler"
+            case "CANCELED": return "Abgebrochen"
+            case "BUILDING": return "Build läuft"
+            case "QUEUED": return "In Warteschlange"
+            case "INITIALIZING": return "Initialisierung"
+            case "BLOCKED": return "Blockiert"
+            default: return state.capitalized
+            }
+        }
     }
 }

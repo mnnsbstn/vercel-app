@@ -67,6 +67,8 @@ struct ConnectView: View {
                     .buttonStyle(.plain)
                     .disabled(model.isConnecting || token.isEmpty)
                     .opacity(token.isEmpty ? 0.5 : 1)
+                    .accessibilityLabel(model.isConnecting ? "Verbindung wird hergestellt" : "Mit Vercel verbinden")
+                    .accessibilityHint("Prüft den Token und lädt deine Projekte")
 
                     Button("Token bei Vercel erstellen") {
                         guard let url = URL(string: "https://vercel.com/account/tokens") else {
@@ -76,6 +78,7 @@ struct ConnectView: View {
                     }
                     .font(.subheadline)
                     .foregroundStyle(.white)
+                    .accessibilityHint("Öffnet die Vercel-Website im Browser")
                 }
                 .vercelCard()
 

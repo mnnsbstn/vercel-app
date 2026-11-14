@@ -72,13 +72,15 @@ struct ProjectDetailView: View {
                     .foregroundStyle(.orange)
                 }
 
-                if deployments.isEmpty && !loading {
+                if loading && deployments.isEmpty && errorMessage == nil {
+                    LoadingNotice(message: "Deployments werden geladen …")
+                } else if deployments.isEmpty && !loading {
                     EmptyNotice(
                         title: "Keine Deployments gefunden",
                         message: "Die letzten Deployments dieses Projekts erscheinen hier.",
                         icon: "shippingbox"
                     )
-                } else {
+                } else if !deployments.isEmpty {
                     LazyVStack(spacing: 10) {
                         ForEach(deployments) { deployment in
                             NavigationLink {
