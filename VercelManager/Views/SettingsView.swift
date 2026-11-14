@@ -4,6 +4,12 @@ struct SettingsView: View {
     @EnvironmentObject private var model: AppModel
     @State private var confirmSignOut = false
 
+    private var appVersionLabel: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.9.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "Vercel Manager · Version \(version) (\(build))"
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -41,8 +47,12 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Text("Vercel Manager · Version 0.1")
+                    Text(appVersionLabel)
                         .foregroundStyle(AppStyle.secondaryText)
+                } footer: {
+                    Text(
+                        "Inoffizielle App von Drittanbietern — nicht von Vercel Inc. betrieben oder unterstützt. Vercel ist eine eingetragene Marke der jeweiligen Inhaber."
+                    )
                 }
             }
             .scrollContentBackground(.hidden)
