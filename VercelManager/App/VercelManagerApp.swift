@@ -18,6 +18,7 @@ struct VercelManagerApp: App {
 
 private struct RootView: View {
     @EnvironmentObject private var model: AppModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Group {
@@ -27,7 +28,7 @@ private struct RootView: View {
                 ConnectView()
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: model.isAuthenticated)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: model.isAuthenticated)
     }
 }
 

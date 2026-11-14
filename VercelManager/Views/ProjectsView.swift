@@ -9,7 +9,7 @@ struct ProjectsView: View {
     }
 
     private var isInitialLoading: Bool {
-        model.isRefreshing && model.projects.isEmpty && model.errorMessage == nil
+        !model.hasLoadedAccountData && model.isRefreshing && model.errorMessage == nil
     }
 
     var body: some View {
@@ -42,14 +42,9 @@ struct ProjectsView: View {
                 }
 
                 if isInitialLoading {
-                    HStack {
-                        Spacer()
-                        ProgressView("Projekte laden …")
-                            .tint(.white)
-                        Spacer()
-                    }
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
+                    LoadingNotice(message: "Projekte werden geladen …")
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                 }
 
                 if filtered.isEmpty && !isInitialLoading {
