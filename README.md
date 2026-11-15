@@ -13,6 +13,8 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 - **[docs/RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md)** – Smoketest-Checkliste vor Release (SBSTN-133).
 - **[docs/SECURITY_PRIVACY.md](docs/SECURITY_PRIVACY.md)** – Security- & Privacy-Review (SBSTN-134).
 - **[docs/RELEASE_GATE.md](docs/RELEASE_GATE.md)** – Release-Gate für Tag `v1.0.0` (SBSTN-138).
+- **[docs/IPHONE_INSTALL.md](docs/IPHONE_INSTALL.md)** – Installation auf physischem iPhone (SBSTN-137).
+- **[docs/CI.md](docs/CI.md)** – GitHub Actions & Merge-Policy (SBSTN-135).
 
 ## Funktionen (Stand `main`, Pre-Release 0.9.x)
 
