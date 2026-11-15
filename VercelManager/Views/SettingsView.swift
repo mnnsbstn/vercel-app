@@ -44,9 +44,16 @@ struct SettingsView: View {
                     }
                 }
 
-                Section("SICHERHEIT") {
+                Section {
                     Label("Token nur im iOS-Schlüsselbund", systemImage: "lock.shield")
-                    Label("Direkte, verschlüsselte Vercel-API-Verbindung", systemImage: "checkmark.shield")
+                    Label("HTTPS direkt zu api.vercel.com", systemImage: "checkmark.shield")
+                    Label("Kein eigener Server, keine Analytics", systemImage: "eye.slash")
+                } header: {
+                    Text("SICHERHEIT & DATENSCHUTZ")
+                } footer: {
+                    Text(
+                        "Es werden nur die für die Anzeige nötigen Vercel-Daten geladen. Build-Logs können sensible Projektinhalte enthalten."
+                    )
                 }
 
                 Section {

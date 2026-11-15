@@ -11,6 +11,8 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 
 - **[CHANGELOG.md](CHANGELOG.md)** – Versionshistorie (aktuell **0.9.0** auf dem Weg zu v1.0.0).
 - **[docs/RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md)** – Smoketest-Checkliste vor Release (SBSTN-133).
+- **[docs/SECURITY_PRIVACY.md](docs/SECURITY_PRIVACY.md)** – Security- & Privacy-Review (SBSTN-134).
+- **[docs/RELEASE_GATE.md](docs/RELEASE_GATE.md)** – Release-Gate für Tag `v1.0.0` (SBSTN-138).
 
 ## Funktionen (Stand `main`, Pre-Release 0.9.x)
 
@@ -64,14 +66,12 @@ xcodebuild -project VercelManager.xcodeproj -scheme VercelManager \
   CODE_SIGNING_ALLOWED=NO test
 ```
 
-## Sicherheit
+## Sicherheit & Datenschutz
 
-Der Token wird im **iOS-Keychain** mit `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` gespeichert. Er wird niemals im Quelltext, in `UserDefaults`, in Logs oder im Repository abgelegt. Die Verbindung erfolgt direkt zwischen dem iPhone und der Vercel-API über HTTPS.
+Details: **[docs/SECURITY_PRIVACY.md](docs/SECURITY_PRIVACY.md)**.
 
-**Hinweis:** Die Access-Token-Eingabe ist bewusst für den privaten MVP vorgesehen. Für eine öffentlich angebotene App mit mehreren Nutzern sollte vor Veröffentlichung **Sign in with Vercel (OAuth/OIDC mit PKCE)** ergänzt werden. Ein Personal Access Token gewährt die Rechte seines Inhabers.
+Der Token liegt im **iOS-Keychain** (`WhenUnlockedThisDeviceOnly`), nicht in `UserDefaults`, Logs oder Git. HTTPS nur zu `https://api.vercel.com`. Beim Abmelden wird der Keychain-Eintrag gelöscht.
 
-## Weiterentwicklung
+Für einen **öffentlichen** Multi-User-Release sollte **OAuth/OIDC (PKCE)** statt PAT perspektivisch ergänzt werden.
 
-Geplant: Deployment-Logs, sichere explizit bestätigte Deployment-Aktionen, Push-Alerts per Webhooks/Backend, Widgets, bessere Fehlerdiagnosen und automatisierte Tests.
-
-Vercel und das Vercel-Logo sind Marken ihrer jeweiligen Inhaber. Dieses Projekt ist nicht offiziell mit Vercel verbunden.
+Vercel und das Vercel-Logo sind Marken ihrer jeweiligen Inhaber. **Inoffizielle App** — nicht von Vercel Inc. betrieben oder unterstützt.

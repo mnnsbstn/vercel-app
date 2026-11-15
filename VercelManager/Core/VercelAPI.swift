@@ -215,8 +215,10 @@ struct VercelAPI {
         }
         guard (200...299).contains(httpResponse.statusCode) else {
             let payload = try? JSONDecoder().decode(APIErrorBody.self, from: data)
-            let message = payload?.error.message ?? HTTPURLResponse.localizedString(
-                forStatusCode: httpResponse.statusCode
+            let message = Self.redactedAPIMessage(
+                payload?.error.message ?? HTTPURLResponse.localizedString(
+                    forStatusCode: httpResponse.statusCode
+                )
             )
             throw VercelAPIError.unexpectedStatus(httpResponse.statusCode, message)
         }
@@ -252,12 +254,24 @@ struct VercelAPI {
         }
         guard (200...299).contains(httpResponse.statusCode) else {
             let payload = try? JSONDecoder().decode(APIErrorBody.self, from: data)
-            let message = payload?.error.message ?? HTTPURLResponse.localizedString(
-                forStatusCode: httpResponse.statusCode
+            let message = Self.redactedAPIMessage(
+                payload?.error.message ?? HTTPURLResponse.localizedString(
+                    forStatusCode: httpResponse.statusCode
+                )
             )
             throw VercelAPIError.unexpectedStatus(httpResponse.statusCode, message)
         }
         return data
+    }
+
+    /// Prevent accidental display of Authorization material in rare API error payloads.
+    static func redactedAPIMessage(_ message: String) -> String {
+        let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return "Unbekannter API-Fehler." }
+        if trimmed.range(of: #"(?i)bearer\s+[a-z0-9._-]+"#, options: .regularExpression) != nil {
+            return "Authentifizierung fehlgeschlagen."
+        }
+        return trimmed
     }
 
     private func get<T: Decodable>(
