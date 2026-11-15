@@ -10,7 +10,8 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 - **Release-Ziel:** 27.11.2026: privat auf echtem iPhone getestete Version `v1.0.0` (kein garantierter App-Store-Release).
 
 - **[CHANGELOG.md](CHANGELOG.md)** – Versionshistorie (**1.0.0** nach Smoketest-Gate).
-- **[docs/RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md)** – Smoketest-Checkliste vor Release (SBSTN-133).
+- **[docs/SMOKE_WALKTHROUGH.md](docs/SMOKE_WALKTHROUGH.md)** – Smoketest **Schritt für Schritt** (SBSTN-133/137).
+- **[docs/RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md)** – kompakte Checkliste.
 - **[docs/SECURITY_PRIVACY.md](docs/SECURITY_PRIVACY.md)** – Security- & Privacy-Review (SBSTN-134).
 - **[docs/RELEASE_GATE.md](docs/RELEASE_GATE.md)** – Release-Gate für Tag `v1.0.0` (SBSTN-138).
 - **[docs/IPHONE_INSTALL.md](docs/IPHONE_INSTALL.md)** – Installation auf physischem iPhone (SBSTN-137).

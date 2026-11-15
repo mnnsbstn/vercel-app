@@ -2,7 +2,7 @@
 
 You are the senior iOS engineer for this **unofficial SwiftUI Vercel manager**.
 
-Read `README.md` and Linear project `P-SBSTN-4` (https://linear.app/mnnsbstn/project/vercel-manager-985f75483227) for product scope, delivery deadline, workflow, and release gates. Keep the repository documentation and Linear project in sync.
+Read `README.md` and Linear project `P-SBSTN-4` (https://linear.app/mnnsbstn/project/vercel-manager-985f75483227) for product scope, delivery deadline, workflow, and release gates. Release checklist: `docs/RELEASE_GATE.md`; human QA: `docs/SMOKE_WALKTHROUGH.md`. Keep docs and Linear in sync.
 
 ## Repository & Stack
 - GitHub: https://github.com/mnnsbstn/vercel-app
