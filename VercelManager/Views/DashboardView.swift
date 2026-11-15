@@ -13,6 +13,10 @@ struct DashboardView: View {
         }.count
     }
 
+    private var isInitialLoading: Bool {
+        !model.hasLoadedAccountData && model.isRefreshing && model.errorMessage == nil
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -64,13 +68,15 @@ struct DashboardView: View {
                         }
                     }
 
-                    if model.recentDeployments.isEmpty && !model.isRefreshing {
+                    if isInitialLoading {
+                        LoadingNotice(message: "Account-Daten werden geladen …")
+                    } else if model.recentDeployments.isEmpty && !model.isRefreshing {
                         EmptyNotice(
                             title: "Keine Deployments",
                             message: "Ziehe nach unten, um die Daten neu zu laden.",
                             icon: "square.stack.3d.up.slash"
                         )
-                    } else {
+                    } else if !model.recentDeployments.isEmpty {
                         LazyVStack(spacing: 11) {
                             ForEach(model.recentDeployments) { deployment in
                                 NavigationLink {
@@ -87,6 +93,7 @@ struct DashboardView: View {
             }
             .background(AppStyle.background)
             .navigationTitle("Übersicht")
+            .accessibilityElement(children: .contain)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

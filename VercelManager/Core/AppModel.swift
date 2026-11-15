@@ -6,6 +6,8 @@ final class AppModel: ObservableObject {
     @Published private(set) var isAuthenticated: Bool
     @Published private(set) var isConnecting = false
     @Published private(set) var isRefreshing = false
+    /// `false` until the first account refresh attempt finishes (success or error).
+    @Published private(set) var hasLoadedAccountData = false
     @Published private(set) var user: VercelUser?
     @Published private(set) var teams: [VercelTeam] = []
     @Published private(set) var projects: [VercelProject] = []
@@ -135,6 +137,7 @@ final class AppModel: ObservableObject {
 
             if generation == refreshGeneration {
                 isRefreshing = false
+                hasLoadedAccountData = true
                 break
             }
         }
@@ -152,6 +155,7 @@ final class AppModel: ObservableObject {
         deploymentsHasMorePages = false
         deploymentsLoadedPages = 0
         errorMessage = nil
+        hasLoadedAccountData = false
         await refresh()
     }
 
@@ -257,6 +261,8 @@ final class AppModel: ObservableObject {
         errorMessage = sessionMessage
         isAuthenticated = false
         hasBootstrapped = false
+        hasLoadedAccountData = false
+        isRefreshing = false
     }
 
     @discardableResult

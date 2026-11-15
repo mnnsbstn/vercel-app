@@ -7,7 +7,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("VERBINDUNG") {
+                Section {
                     LabeledContent("Benutzer") {
                         Text(model.user?.username ?? model.user?.email ?? "Verbunden")
                     }
@@ -25,6 +25,17 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.navigationLink)
                     .disabled(model.isRefreshing || model.isConnecting)
+                    .accessibilityHint(
+                        model.isRefreshing
+                            ? "Account wird gerade aktualisiert"
+                            : "Wechselt zwischen persönlichem Account und Teams"
+                    )
+                } header: {
+                    Text("VERBINDUNG")
+                } footer: {
+                    if model.isRefreshing {
+                        Text("Projekte und Deployments werden für den gewählten Account geladen.")
+                    }
                 }
 
                 Section("SICHERHEIT") {
