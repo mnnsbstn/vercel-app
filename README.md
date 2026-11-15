@@ -9,14 +9,14 @@ Native, **inoffizielle** iOS-App zur Verwaltung und Überwachung von Vercel-Proj
 - **[Linear-Projekt P-SBSTN-4](https://linear.app/mnnsbstn/project/vercel-manager-985f75483227)** – 4 Meilensteine, 20 Issues, Fristen und Abhängigkeiten.
 - **Release-Ziel:** 27.11.2026: privat auf echtem iPhone getestete Version `v1.0.0` (kein garantierter App-Store-Release).
 
-- **[CHANGELOG.md](CHANGELOG.md)** – Versionshistorie (aktuell **0.9.0** auf dem Weg zu v1.0.0).
+- **[CHANGELOG.md](CHANGELOG.md)** – Versionshistorie (**1.0.0** nach Smoketest-Gate).
 - **[docs/RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md)** – Smoketest-Checkliste vor Release (SBSTN-133).
 - **[docs/SECURITY_PRIVACY.md](docs/SECURITY_PRIVACY.md)** – Security- & Privacy-Review (SBSTN-134).
 - **[docs/RELEASE_GATE.md](docs/RELEASE_GATE.md)** – Release-Gate für Tag `v1.0.0` (SBSTN-138).
 - **[docs/IPHONE_INSTALL.md](docs/IPHONE_INSTALL.md)** – Installation auf physischem iPhone (SBSTN-137).
 - **[docs/CI.md](docs/CI.md)** – GitHub Actions & Merge-Policy (SBSTN-135).
 
-## Funktionen (Stand `main`, Pre-Release 0.9.x)
+## Funktionen (Stand `main`, Release-Kandidat 1.0.0)
 
 - Verbindung mit **Vercel Access Token** (Keychain, `WhenUnlockedThisDeviceOnly`)
 - Persönlicher Account und Teams, robuster Scope-Wechsel
