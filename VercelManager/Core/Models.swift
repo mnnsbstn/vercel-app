@@ -178,7 +178,7 @@ enum RedeployValidationError: LocalizedError {
 }
 
 enum RedeployRequestBuilder {
-    struct Body: Encodable, Equatable {
+    struct Body: Codable, Equatable {
         let name: String
         let deploymentId: String
     }

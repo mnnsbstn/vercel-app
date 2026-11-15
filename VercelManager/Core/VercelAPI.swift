@@ -39,9 +39,11 @@ enum VercelAPIError: LocalizedError {
 struct VercelAPI {
     private let token: String
     private let baseURL = "https://api.vercel.com"
+    private let session: URLSession
 
-    init(token: String) {
+    init(token: String, session: URLSession = .shared) {
         self.token = token
+        self.session = session
     }
 
     func user() async throws -> VercelUser {
@@ -207,7 +209,7 @@ struct VercelAPI {
         request.httpBody = try JSONEncoder().encode(body)
         request.cachePolicy = .reloadIgnoringLocalCacheData
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw VercelAPIError.invalidResponse
         }
@@ -244,7 +246,7 @@ struct VercelAPI {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.cachePolicy = .reloadIgnoringLocalCacheData
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw VercelAPIError.invalidResponse
         }
