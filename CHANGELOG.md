@@ -10,8 +10,13 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0
 
 - End-to-End-Smoketest mit isoliertem Vercel-Testprojekt (SBSTN-133)
 - Install und QA auf physischem iPhone (SBSTN-137)
-- Security/Privacy-Review und Release-Gate (SBSTN-134, SBSTN-138)
-- Erweiterte Unit-Tests mit URLProtocol-Mocks (SBSTN-132)
+- Tag `v1.0.0` nach Release-Gate (SBSTN-138)
+
+### Sicherheit (SBSTN-134)
+
+- `docs/SECURITY_PRIVACY.md`, `docs/RELEASE_GATE.md`
+- API-Fehlertexte: Redaktion von `Bearer`-Mustern
+- Settings: Datenschutz-Kurzinfos
 
 ## [0.9.0] - 2026-11-14
 

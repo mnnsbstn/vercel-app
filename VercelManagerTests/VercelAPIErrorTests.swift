@@ -173,3 +173,15 @@ final class NetworkUserMessageTests: XCTestCase {
         XCTAssertTrue(message.contains("Anfragen"))
     }
 }
+
+final class VercelAPIMessageRedactionTests: XCTestCase {
+    func testStripsBearerTokenFromErrorText() {
+        let redacted = VercelAPI.redactedAPIMessage("Invalid header Bearer secret_token_abc")
+        XCTAssertEqual(redacted, "Authentifizierung fehlgeschlagen.")
+    }
+
+    func testPassesThroughNormalMessages() {
+        let text = "Project not found"
+        XCTAssertEqual(VercelAPI.redactedAPIMessage(text), text)
+    }
+}
