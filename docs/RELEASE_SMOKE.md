@@ -28,5 +28,6 @@ Checkliste für manuelle Verifikation mit **isoliertem Vercel-Testprojekt** (kei
 
 ## Abschluss
 
+- [ ] Protokoll nach [SMOKE_REPORT_TEMPLATE.md](SMOKE_REPORT_TEMPLATE.md) (optional im Repo als `docs/smoke-YYYY-MM-DD.md`)
 - [ ] Ergebnisse in Linear SBSTN-133 kommentieren
-- [ ] Offene Bugs als neue Issues, P0 vor v1.0.0
+- [ ] Offene Bugs als neue Issues, P0 vor Merge von Release-PR / Tag `v1.0.0`

@@ -6,17 +6,23 @@ Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0
 
 ## [Unreleased]
 
-### Geplant bis v1.0.0 (27.11.2026)
+_(Nur nach bestandenem Smoketest auf `main` taggen — siehe [RELEASE_GATE.md](docs/RELEASE_GATE.md).)_
 
-- End-to-End-Smoketest mit isoliertem Vercel-Testprojekt (SBSTN-133)
-- Install und QA auf physischem iPhone (SBSTN-137)
-- Tag `v1.0.0` nach Release-Gate (SBSTN-138)
+## [1.0.0] - ausstehend (nach SBSTN-133)
 
-### Sicherheit (SBSTN-134)
+### Hinzugefügt
 
-- `docs/SECURITY_PRIVACY.md`, `docs/RELEASE_GATE.md`
-- API-Fehlertexte: Redaktion von `Bearer`-Mustern
-- Settings: Datenschutz-Kurzinfos
+- App-Icon (`Assets.xcassets`), Security/Privacy-Doku, 21 Unit-Tests inkl. URLProtocol-Mocks
+- UX: Loading, VoiceOver, Reduce Motion
+
+### Enthalten seit 0.9.0
+
+- Logs, Redeploy-Bestätigung, Pagination, Team-Scope-Fixes, CI
+
+### Vor Merge dieses Release-PRs
+
+- [ ] [RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md) abgeschlossen
+- [ ] [SMOKE_REPORT_TEMPLATE.md](docs/SMOKE_REPORT_TEMPLATE.md) ausgefüllt
 
 ## [0.9.0] - 2026-11-14
 
