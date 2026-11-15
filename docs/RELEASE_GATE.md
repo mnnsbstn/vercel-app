@@ -5,16 +5,16 @@ Ziel-Datum: **27.11.2026** · Marketing-Version: **1.0.0**
 ## Pflicht (alle Haken vor Tag)
 
 - [x] `main` grün in GitHub Actions (Build + Tests) — siehe [CI.md](CI.md)
-- [ ] [RELEASE_SMOKE.md](RELEASE_SMOKE.md) auf Simulator + **physischem iPhone** durchgeführt
+- [ ] [SMOKE_WALKTHROUGH.md](SMOKE_WALKTHROUGH.md) / [RELEASE_SMOKE.md](RELEASE_SMOKE.md) auf Simulator + **physischem iPhone** durchgeführt
 - [x] [SECURITY_PRIVACY.md](SECURITY_PRIVACY.md) auf `main` (Review 2025-11-15); „Vor Release“ beim Smoke bestätigen
 - [ ] Redeploy nur auf isoliertem Testprojekt verifiziert
-- [ ] `CHANGELOG.md` — Abschnitt `[1.0.0]` mit Release-Datum
-- [ ] `MARKETING_VERSION` = `1.0.0` — mit Merge von Draft-PR **#13**
+- [ ] `CHANGELOG.md` — `[1.0.0]`-Datum nach erfolgreichem Smoke setzen
+- [x] `MARKETING_VERSION` = `1.0.0` auf `main` (PR #13)
 - [ ] Git-Tag `v1.0.0` — Anleitung [TAG_v1.0.0.md](TAG_v1.0.0.md), Text [RELEASE_NOTES_v1.0.0.md](RELEASE_NOTES_v1.0.0.md)
 
 ## Optional
 
-- [ ] App-Icon in Assets — mit Merge von Draft-PR **#13** (SBSTN-136)
+- [x] App-Icon in Assets auf `main` (SBSTN-136)
 - [ ] TestFlight (SBSTN-139)
 
 ## Nach Tag
