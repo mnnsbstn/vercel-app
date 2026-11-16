@@ -61,7 +61,15 @@ Siehe [IPHONE_INSTALL.md](IPHONE_INSTALL.md).
 
 1. [SMOKE_REPORT_TEMPLATE.md](SMOKE_REPORT_TEMPLATE.md) ausfüllen (oder als Kommentar in **SBSTN-133**).
 2. P0-Bugs sofort notieren; P1 können nach v1.0.0.
-3. Wenn **alle P0 grün**: [TAG_v1.0.0.md](TAG_v1.0.0.md) ausführen → **SBSTN-138** / **137** auf Done.
+3. Wenn **alle P0 grün**:
+
+```bash
+git pull origin main
+CONFIRM_SMOKE=1 ./scripts/create-release.sh
+gh release create v1.0.0 --title "Vercel Manager 1.0.0" --notes-file docs/RELEASE_NOTES_v1.0.0.md
+```
+
+→ **SBSTN-138** / **137** auf Done (siehe [TAG_v1.0.0.md](TAG_v1.0.0.md)).
 
 ---
 
