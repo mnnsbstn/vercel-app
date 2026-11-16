@@ -19,10 +19,10 @@ _(Nur nach bestandenem Smoketest auf `main` taggen — siehe [RELEASE_GATE.md](d
 
 - Logs, Redeploy-Bestätigung, Pagination, Team-Scope-Fixes, CI
 
-### Vor Merge dieses Release-PRs
+### Release-Gate (vor Tag)
 
-- [ ] [RELEASE_SMOKE.md](docs/RELEASE_SMOKE.md) abgeschlossen
-- [ ] [SMOKE_REPORT_TEMPLATE.md](docs/SMOKE_REPORT_TEMPLATE.md) ausgefüllt
+- [ ] [SMOKE_WALKTHROUGH.md](docs/SMOKE_WALKTHROUGH.md) abgeschlossen (SBSTN-133)
+- [ ] iPhone bestätigt (SBSTN-137)
 
 ## [0.9.0] - 2026-11-14
 

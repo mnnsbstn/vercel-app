@@ -10,7 +10,7 @@ Ziel-Datum: **27.11.2026** · Marketing-Version: **1.0.0**
 - [ ] Redeploy nur auf isoliertem Testprojekt verifiziert
 - [ ] `CHANGELOG.md` — `[1.0.0]`-Datum nach erfolgreichem Smoke setzen
 - [x] `MARKETING_VERSION` = `1.0.0` auf `main` (PR #13)
-- [ ] Git-Tag `v1.0.0` — Anleitung [TAG_v1.0.0.md](TAG_v1.0.0.md), Text [RELEASE_NOTES_v1.0.0.md](RELEASE_NOTES_v1.0.0.md)
+- [ ] Git-Tag `v1.0.0` — `CONFIRM_SMOKE=1 ./scripts/create-release.sh` oder [TAG_v1.0.0.md](TAG_v1.0.0.md); Notes [RELEASE_NOTES_v1.0.0.md](RELEASE_NOTES_v1.0.0.md)
 
 ## Optional
 
@@ -21,4 +21,4 @@ Ziel-Datum: **27.11.2026** · Marketing-Version: **1.0.0**
 
 1. Auf dem iPhone installierte Build-Version notieren.
 2. Linear SBSTN-137 / SBSTN-138 auf **Done**.
-3. Bekannte Follow-ups als neue Issues, nicht in v1.0.0 blockieren.
+3. Follow-ups siehe [V1_BACKLOG.md](V1_BACKLOG.md) / Linear, nicht in v1.0.0 blockieren.
