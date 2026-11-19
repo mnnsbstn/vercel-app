@@ -17,7 +17,7 @@ Requires CONFIRM_SMOKE=1 (or export) after SBSTN-133 / SMOKE_WALKTHROUGH passed.
 Optional: RELEASE_DATE=YYYY-MM-DD (default: today)
 
 Steps: updates CHANGELOG date line, commits if needed, tags, pushes tag.
-Then run: gh release create ${TAG} --notes-file docs/RELEASE_NOTES_v1.0.0.md
+Optional: CREATE_GITHUB_RELEASE=1 — erstellt GitHub Release via gh (falls installiert).
 EOF
 }
 
@@ -63,6 +63,21 @@ fi
 git tag -a "$TAG" -m "Vercel Manager ${TAG} — private iOS release"
 git push origin main
 git push origin "$TAG"
+echo "✓ Tagged and pushed ${TAG}"
+
+NOTES_FILE="$REPO_ROOT/docs/RELEASE_NOTES_v${VERSION}.md"
+if [[ "${CREATE_GITHUB_RELEASE:-}" == "1" ]]; then
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "warning: gh not found; skip GitHub Release." >&2
+  elif [[ ! -f "$NOTES_FILE" ]]; then
+    echo "warning: missing $NOTES_FILE; skip GitHub Release." >&2
+  else
+    gh release create "$TAG" --title "Vercel Manager ${VERSION}" --notes-file "$NOTES_FILE"
+    echo "✓ GitHub Release ${TAG} created"
+  fi
+else
+  echo "Next: CREATE_GITHUB_RELEASE=1 re-run, or:"
+  echo "  gh release create ${TAG} --title \"Vercel Manager ${VERSION}\" --notes-file docs/RELEASE_NOTES_v${VERSION}.md"
+fi
 
 echo "✓ Tagged and pushed ${TAG}"
-echo "Next: gh release create ${TAG} --title \"Vercel Manager ${VERSION}\" --notes-file docs/RELEASE_NOTES_v1.0.0.md"
