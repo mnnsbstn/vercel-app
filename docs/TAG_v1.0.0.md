@@ -6,8 +6,7 @@ Nur ausführen, wenn [RELEASE_GATE.md](RELEASE_GATE.md) und [SMOKE_WALKTHROUGH.m
 
 ```bash
 git checkout main && git pull origin main
-CONFIRM_SMOKE=1 ./scripts/create-release.sh
-gh release create v1.0.0 --title "Vercel Manager 1.0.0" --notes-file docs/RELEASE_NOTES_v1.0.0.md
+CREATE_GITHUB_RELEASE=1 CONFIRM_SMOKE=1 ./scripts/create-release.sh
 ```
 
 `CONFIRM_SMOKE=1` ist bewusst nötig — verhindert Tag ohne Smoketest.

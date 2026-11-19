@@ -7,6 +7,7 @@ GitHub Actions: [`.github/workflows/ios-build.yml`](../.github/workflows/ios-bui
 | Trigger | Zweig |
 |---------|--------|
 | `push` → `main` | Build + Unit-Tests |
+| `push` → Tag `v*` | Build + Unit-Tests (Release-Sicherheitsnetz) |
 | `pull_request` | Build + Unit-Tests auf PR-Branch |
 
 Runner: **`macos` mit Label `xcode-27`** (Xcode 27, iOS Simulator).
