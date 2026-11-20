@@ -1,0 +1,148 @@
+:root {
+  color-scheme: dark;
+  --bg: #000;
+  --surface: #111;
+  --border: #2a2a2a;
+  --text: #f5f5f5;
+  --muted: #a1a1a1;
+  --accent: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
+}
+
+.app-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 12px 0 8px;
+}
+
+.lead {
+  color: var(--muted);
+  margin: 0 0 24px;
+  line-height: 1.45;
+}
+
+.label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  margin-top: 8px;
+}
+
+.error {
+  background: #2a1212;
+  border: 1px solid #5c2020;
+  color: #ffb4b4;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 12px 0;
+  font-size: 0.9rem;
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 20px;
+  line-height: 1.4;
+}
+
+nav.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+nav.tabs button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+nav.tabs button.active {
+  border-color: var(--text);
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: var(--surface);
+}
+
+.card h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.spinner {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+}
