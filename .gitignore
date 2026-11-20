@@ -17,3 +17,7 @@ build/
 *.mobileprovision
 *.cer
 *.key
+
+# Web PWA
+web/node_modules/
+web/dist/
